@@ -53,18 +53,19 @@ weld. It returns no source frames or feature vectors. A failed image build or
 missing secret is a setup result, not a measurement; do not extrapolate it.
 Only expand beyond the pilot after inspecting the result and costs.
 
-## First pilot result
+## Confirmed pilot result
 
-The GPU worker completed 16 windows from the 1,119-frame, 31 fps pilot video,
-and confirmed one 2,304-dimensional feature vector per window. The worker
-reported 1.467 seconds of GPU inference and 0.573 seconds of preprocessing
-for those 16 windows. Its stride-one extrapolation for all 1,056 windows
-was 144.6 seconds of measured-category compute and about $0.044 of A10 GPU
-time, excluding startup, image build, CPU, memory and GCS transfer. This is
-an estimate from the first 16 windows of a single video, not a full-weld
-measurement. The original local command raised a JSON parsing error after
-the worker succeeded because MMAction2 logged a checkpoint message on
-stdout before the result. The local parser now selects the result record.
+The local command and GPU worker completed successfully on the user's Modal
+account. The worker processed 16 windows from the 1,119-frame, 31 fps pilot
+video and confirmed a 2,304-dimensional feature vector per window. It reported
+1.329 seconds of GPU inference, 0.554 seconds of preprocessing, 2.349 seconds
+to download the AVI, and 4.982 seconds to load the model. Its stride-one
+extrapolation for all 1,056 windows was 133.4 seconds of measured-category
+compute and about $0.041 of A10 GPU time, excluding startup, image build,
+CPU, memory and GCS transfer. This is an estimate from the first 16 windows
+of a single video, not a full-weld measurement. A previous worker run reported
+144.6 seconds and $0.044 on the same sample; the variation underscores that
+the extrapolation is approximate.
 
 At the published A10 rate of $0.000306 per GPU-second, 10 minutes of GPU time
 is about $0.18. CPU, memory, image build, GCS transfer and possible regional
@@ -73,14 +74,11 @@ spending ceiling. See https://modal.com/pricing for current rates.
 
 ## Known limits
 
-- This source environment cannot reach Modal's server. The GPU worker
-  completed on the user's Modal account, but the revised local parser has
-  only been checked against the observed stdout, not rerun remotely.
+- This source environment cannot reach Modal's server. The user ran the
+  benchmark successfully on their Modal account and shared its output.
 - The MMAction2 0.15 stack is old. Its pinned CUDA/PyTorch/MMCV wheel set may
-  need repair in future environments. The second Sandbox run completed the
-  16-window worker after pinning SciPy, but the local parser failed on a
-  diagnostic line; that parser is fixed. Preserve the checkpoint and record
-  any version change before treating the result as paper-comparable.
+  need repair in future environments. Preserve the checkpoint and record any
+  version change before treating the result as paper-comparable.
 - One video gives no estimate of how different resolution/duration sessions
   affect throughput. The benchmark uses a single crop and starts at frame 0;
   it does not measure validation AUC, training or three-stream alignment.
