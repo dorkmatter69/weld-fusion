@@ -1,7 +1,10 @@
+"""Archive integrity and path-safety tests; standard library only."""
+
 import io
 import tarfile
-
-import pytest
+import tempfile
+import unittest
+from pathlib import Path
 
 from weldfusion.archive import inventory
 
@@ -14,47 +17,59 @@ def _archive(path, names):
             tar.addfile(info, io.BytesIO(body))
 
 
-def test_inventory_and_extract(tmp_path):
-    archive = tmp_path / "small.tar.gz"
-    _archive(archive, [("./data/a.csv", b"a,b\n1,2\n"), ("data/b.flac", b"fake")])
-    report = inventory(archive, tmp_path / "staged")
-    assert report["member_count"] == 2
-    assert report["total_uncompressed_bytes"] == 12
-    assert (tmp_path / "staged/data/a.csv").read_bytes() == b"a,b\n1,2\n"
-    assert len(report["members"][0]["sha256"]) == 64
+class ArchiveTests(unittest.TestCase):
+    def setUp(self):
+        self.temp = tempfile.TemporaryDirectory()
+        self.addCleanup(self.temp.cleanup)
+        self.root = Path(self.temp.name)
+
+    def test_inventory_and_extract(self):
+        archive = self.root / "small.tar.gz"
+        _archive(archive, [("./data/a.csv", b"a,b\n1,2\n"), ("data/b.flac", b"fake")])
+        report = inventory(archive, self.root / "staged")
+        self.assertEqual(report["member_count"], 2)
+        self.assertEqual(report["total_uncompressed_bytes"], 12)
+        self.assertEqual((self.root / "staged/data/a.csv").read_bytes(), b"a,b\n1,2\n")
+        self.assertEqual(len(report["members"][0]["sha256"]), 64)
+
+    def test_archive_with_dot_root_directory(self):
+        archive = self.root / "dot-root.tar.gz"
+        with tarfile.open(archive, "w:gz") as tar:
+            for name in ("./", "./s1/"):
+                folder = tarfile.TarInfo(name)
+                folder.type = tarfile.DIRTYPE
+                tar.addfile(folder)
+            item = tarfile.TarInfo("./s1/a.csv")
+            item.size = 3
+            tar.addfile(item, io.BytesIO(b"abc"))
+        staged = self.root / "staged"
+        report = inventory(archive, staged)
+        self.assertEqual(report["member_count"], 1)
+        self.assertEqual((staged / "s1/a.csv").read_bytes(), b"abc")
+
+    def test_reject_unsafe_names(self):
+        for i, name in enumerate(("../escape", "/absolute", "data/../escape", "data\\escape")):
+            with self.subTest(name=name):
+                archive = self.root / f"bad-{i}.tar.gz"
+                _archive(archive, [(name, b"bad")])
+                with self.assertRaisesRegex(ValueError, "unsafe"):
+                    inventory(archive, self.root / "staged")
+
+    def test_reject_symlink_parent(self):
+        archive = self.root / "small.tar.gz"
+        _archive(archive, [("data/a.csv", b"abc")])
+        staged = self.root / "staged"
+        staged.mkdir()
+        (staged / "data").symlink_to(self.root, target_is_directory=True)
+        with self.assertRaisesRegex(ValueError, "symlink"):
+            inventory(archive, staged)
+
+    def test_reject_duplicate_members(self):
+        archive = self.root / "duplicate.tar.gz"
+        _archive(archive, [("a.csv", b"one"), ("./a.csv", b"two")])
+        with self.assertRaisesRegex(ValueError, "duplicate"):
+            inventory(archive)
 
 
-def test_archive_with_dot_root_directory(tmp_path):
-    archive = tmp_path / "dot-root.tar.gz"
-    with tarfile.open(archive, "w:gz") as tar:
-        root = tarfile.TarInfo("./")
-        root.type = tarfile.DIRTYPE
-        tar.addfile(root)
-        folder = tarfile.TarInfo("./s1/")
-        folder.type = tarfile.DIRTYPE
-        tar.addfile(folder)
-        item = tarfile.TarInfo("./s1/a.csv")
-        item.size = 3
-        tar.addfile(item, io.BytesIO(b"abc"))
-    staged = tmp_path / "staged"
-    report = inventory(archive, staged)
-    assert report["member_count"] == 1
-    assert (staged / "s1/a.csv").read_bytes() == b"abc"
-
-
-@pytest.mark.parametrize("name", ["../escape", "/absolute", "data/../escape", "data\\escape"])
-def test_reject_unsafe_names(tmp_path, name):
-    archive = tmp_path / "bad.tar.gz"
-    _archive(archive, [(name, b"bad")])
-    with pytest.raises(ValueError, match="unsafe"):
-        inventory(archive, tmp_path / "staged")
-
-
-def test_reject_symlink_parent(tmp_path):
-    archive = tmp_path / "small.tar.gz"
-    _archive(archive, [("data/a.csv", b"abc")])
-    staged = tmp_path / "staged"
-    staged.mkdir()
-    (staged / "data").symlink_to(tmp_path, target_is_directory=True)
-    with pytest.raises(ValueError, match="symlink"):
-        inventory(archive, staged)
+if __name__ == "__main__":
+    unittest.main()

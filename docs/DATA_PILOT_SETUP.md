@@ -14,6 +14,13 @@ python -m pip install -e '.[dev]'
 python -m pytest tests/test_archive.py tests/test_recorded_timestamps.py tests/test_episode_export.py
 ```
 
+If package installation is unavailable, the archive safety tests alone use
+only Python's standard library:
+
+```bash
+PYTHONPATH=src python -m unittest discover -s tests -p test_archive.py
+```
+
 ## First pass: measure without unpacking
 
 Copy the archive to a worker with adequate storage. The scanner reads the
