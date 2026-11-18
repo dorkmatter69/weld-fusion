@@ -54,9 +54,11 @@ def benchmark_video(path, sample_id, max_windows, download_s):
     from mmaction.apis import init_recognizer
 
     cfg = mmcv.Config.fromfile(CONFIG)
-    cfg.model.test_cfg = dict(feature_extraction=True)
+    cfg.test_cfg = dict(feature_extraction=True)
     load_start = time.monotonic()
-    model = init_recognizer(cfg, "/opt/checkpoints/slowfast.pth", device="cuda:0")
+    model = init_recognizer(
+        cfg, "/opt/checkpoints/slowfast.pth", device="cuda:0", use_frames=True
+    )
     model.eval()
     load_s = time.monotonic() - load_start
 
