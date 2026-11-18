@@ -25,7 +25,8 @@ image = (
     modal.Image.from_registry("pytorch/pytorch:1.8.1-cuda11.1-cudnn8-runtime")
     .apt_install("git", "curl", "libgl1", "libglib2.0-0", "ca-certificates")
     .run_commands(
-        "python -m pip install 'numpy==1.23.5' 'opencv-python-headless==4.5.5.64'",
+        "python -m pip install 'numpy==1.23.5' 'scipy==1.10.1' "
+        "'opencv-python-headless==4.5.5.64'",
         "python -m pip install 'mmcv-full==1.4.0' "
         "-f https://download.openmmlab.com/mmcv/dist/cu111/torch1.8.0/index.html",
         "git clone --depth 1 --branch v0.15.0 "
