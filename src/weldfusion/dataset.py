@@ -9,8 +9,10 @@ anywhere under the root, so the loader does not depend on the folder layout.
 from __future__ import annotations
 
 import csv
+import hashlib
 import re
 from dataclasses import dataclass, field
+from datetime import datetime
 from pathlib import Path
 
 import numpy as np
@@ -42,6 +44,15 @@ AUDIO_EXT = {".flac", ".wav"}
 NON_SIGNAL_COLUMNS = {"date", "time", "remarks", "part no"}
 
 
+def _parse_csv_clock(date: str, time: str) -> datetime:
+    for fmt in ("%m/%d/%Y %H:%M:%S.%f", "%m/%d/%Y %H:%M:%S"):
+        try:
+            return datetime.strptime(f"{date} {time}", fmt)
+        except ValueError:
+            pass
+    raise ValueError(f"invalid sensor date/time: {date} {time}")
+
+
 @dataclass
 class WeldSample:
     stem: str
@@ -62,7 +73,9 @@ class WeldSample:
 
     @property
     def is_defect(self) -> bool | None:
-        return None if self.class_id is None else self.class_id != 0
+        if self.class_id is not None:
+            return self.class_id != 0
+        return False if self.label.lower() == "good" else None
 
     def modalities(self) -> list[str]:
         return [
@@ -74,6 +87,16 @@ class WeldSample:
             )
             if path is not None
         ]
+
+    def output_name(self, duplicate_stem: bool = False) -> str:
+        """Stable basename; qualify repeated stems by their source subdirectory."""
+        if not duplicate_stem:
+            return self.stem
+        source = self.extra.get("relative_subdir")
+        if source is None:
+            raise ValueError(f"no source subdirectory for duplicated sample {self.stem}")
+        digest = hashlib.sha256(source.encode()).hexdigest()[:12]
+        return f"{self.stem}-{digest}"
 
 
 def parse_stem(stem: str) -> dict:
@@ -93,24 +116,44 @@ def discover_samples(root: str | Path) -> list[WeldSample]:
     root = Path(root)
     if not root.exists():
         raise FileNotFoundError(root)
-    samples: dict[str, WeldSample] = {}
+    manifest_rows = {}
+    manifest = root / "manifest.csv"
+    if manifest.is_file():
+        with manifest.open(newline="", encoding="utf-8-sig") as file:
+            for row in csv.DictReader(file):
+                key = row["SUBDIRS"].strip("/")
+                if key in manifest_rows:
+                    raise ValueError(f"duplicate manifest subdirectory: {key}")
+                manifest_rows[key] = row
+    samples: dict[tuple[Path, str], WeldSample] = {}
     for path in sorted(root.rglob("*")):
         if not path.is_file():
+            continue
+        if path == manifest:
             continue
         ext = path.suffix.lower()
         if ext not in VIDEO_EXT | AUDIO_EXT | {".csv"}:
             continue
         stem = path.stem
-        if stem not in samples:
-            samples[stem] = WeldSample(stem=stem, **parse_stem(stem))
-        sample = samples[stem]
+        key = (path.parent, stem)
+        if key not in samples:
+            sample = WeldSample(stem=stem, **parse_stem(stem))
+            relative_subdir = path.parent.relative_to(root).as_posix()
+            sample.extra["relative_subdir"] = relative_subdir
+            record = manifest_rows.get(relative_subdir)
+            if record:
+                sample.label = record["CATEGORY"]
+                sample.class_id = 0 if sample.label.lower() == "good" else None
+                sample.extra["manifest"] = record
+            samples[key] = sample
+        sample = samples[key]
         if ext in VIDEO_EXT:
             sample.video = path
         elif ext in AUDIO_EXT:
             sample.audio = path
         else:
             sample.sensors = path
-    return sorted(samples.values(), key=lambda s: s.stem)
+    return sorted(samples.values(), key=lambda s: (s.stem, str(s.video or s.sensors or s.audio)))
 
 
 @dataclass
@@ -118,6 +161,8 @@ class SensorTable:
     columns: list[str]
     values: np.ndarray  # shape (rows, len(columns)), float64
     dropped_columns: list[str]
+    timestamps_s: np.ndarray | None = None  # relative to the first CSV reading
+    first_timestamp_local: str | None = None  # original string; timezone unknown
 
     def column(self, name: str) -> np.ndarray:
         return self.values[:, self.columns.index(name)]
@@ -152,4 +197,25 @@ def load_sensor_table(path: str | Path) -> SensorTable:
     values = np.array([[float(r[i]) for i in keep_idx] for r in rows], dtype=np.float64)
     if values.size == 0:
         values = values.reshape(0, len(keep_idx))
-    return SensorTable(columns=keep_names, values=values, dropped_columns=dropped)
+    timestamps = None
+    first_timestamp_local = None
+    if "Date" in header and "Time" in header and rows:
+        date_i, time_i = header.index("Date"), header.index("Time")
+        first_timestamp_local = f"{rows[0][date_i]} {rows[0][time_i]}"
+        try:
+            clock = [_parse_csv_clock(r[date_i], r[time_i]) for r in rows]
+        except (ValueError, IndexError) as exc:
+            raise ValueError(f"invalid Date/Time reading in {path}") from exc
+        timestamps = np.asarray(
+            [(instant - clock[0]).total_seconds() for instant in clock],
+            dtype=np.float64,
+        )
+        if np.any(np.diff(timestamps) <= 0):
+            raise ValueError(f"non-increasing Date/Time readings in {path}")
+    return SensorTable(
+        columns=keep_names,
+        values=values,
+        dropped_columns=dropped,
+        timestamps_s=timestamps,
+        first_timestamp_local=first_timestamp_local,
+    )

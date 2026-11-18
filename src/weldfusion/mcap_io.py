@@ -1,6 +1,7 @@
 """Write one weld to one MCAP file, and read a summary back.
 
-Topics (all JSON, log time = nanoseconds since the first video frame):
+Topics (all JSON; video time zero is its first frame, while recorded sensor
+times are relative to the first sensor row until clock alignment is verified):
 
     /weld/meta          one message: label, class, source files, stream info
     /weld/alignment     one message: sensor rate used and arc-on checks
@@ -28,10 +29,10 @@ from mcap.writer import Writer
 
 from . import __version__
 from .align import (
+    aligned_sensor_times,
     audio_rms_envelope,
     build_alignment,
     scan_video,
-    sensor_times_s,
 )
 from .dataset import WeldSample, load_sensor_table
 
@@ -63,6 +64,7 @@ def write_weld_mcap(
     sensor_rate_hz: float | None = None,
     embed_every: int = 0,
     jpeg_quality: int = 80,
+    allow_unregistered_clocks: bool = False,
 ) -> dict:
     """Convert one weld sample to MCAP. Returns the alignment as a dict."""
     if sample.video is None:
@@ -70,8 +72,13 @@ def write_weld_mcap(
     out_path = Path(out_path)
     out_path.parent.mkdir(parents=True, exist_ok=True)
 
-    video = scan_video(sample.video)
     sensors = load_sensor_table(sample.sensors) if sample.sensors else None
+    if sensors is not None and sensors.timestamps_s is not None and not allow_unregistered_clocks:
+        raise ValueError(
+            "sensor and video clock origins are unregistered; use explicit "
+            "allow_unregistered_clocks only for exploratory MCAP output"
+        )
+    video = scan_video(sample.video)
 
     audio_rms = audio_times = None
     audio_info = None
@@ -129,6 +136,10 @@ def write_weld_mcap(
                 "columns": sensors.columns if sensors else [],
                 "rows": len(sensors) if sensors else 0,
                 "dropped_columns": sensors.dropped_columns if sensors else [],
+                "time_source": alignment.sensor_rate_source,
+                "time_origin": "first_sensor_row" if alignment.sensor_rate_source == "csv_date_time" else "assumed_video_start",
+                "first_timestamp_local": sensors.first_timestamp_local if sensors else None,
+                "clock_alignment_verified": False if sensors and sensors.timestamps_s is not None else None,
             },
             "audio": audio_info,
         }
@@ -137,7 +148,9 @@ def write_weld_mcap(
 
         if sensors is not None and len(sensors) and alignment.sensor_rate_hz > 0:
             ch = channel("/sensors/weld")
-            times = sensor_times_s(len(sensors), alignment.sensor_rate_hz)
+            times = aligned_sensor_times(
+                sensors, alignment.sensor_rate_hz, alignment.sensor_rate_source
+            )
             for i, (t, row) in enumerate(zip(times, sensors.values)):
                 emit(ch, float(t), dict(zip(sensors.columns, row.tolist())), seq=i)
 

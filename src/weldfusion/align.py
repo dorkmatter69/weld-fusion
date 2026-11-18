@@ -1,10 +1,10 @@
 """Put video, sensor and audio streams on one timeline and check the fit.
 
-Time zero is the first video frame. The sensor CSVs in Intel's published
-samples carry no timestamps, so sensor rows are spread uniformly over the
-video duration (the same assumption Intel's own simulator makes) unless a
-sensor rate is given. The arc-on interval is then detected independently in
-each stream so the assumption can be checked instead of trusted.
+Video time zero is the first frame. When Date and Time are present in the
+sensor CSV, readings use measured intervals relative to the first sensor row.
+The absolute offset between the camera and sensor clocks is not known. For
+samples without timestamps, rows are spread over video duration unless a
+sensor rate is supplied.
 """
 
 from __future__ import annotations
@@ -82,7 +82,7 @@ class Alignment:
     video_duration_s: float
     sensor_rows: int
     sensor_rate_hz: float
-    sensor_rate_source: str  # "uniform_over_video" or "given"
+    sensor_rate_source: str  # "csv_date_time", "uniform_over_video", or "given"
     arc_on_sensor_s: tuple[float, float] | None
     arc_on_video_s: tuple[float, float] | None
     arc_on_audio_s: tuple[float, float] | None
@@ -97,6 +97,13 @@ def sensor_times_s(rows: int, rate_hz: float) -> np.ndarray:
     return np.arange(rows) / rate_hz
 
 
+def aligned_sensor_times(sensors: SensorTable, rate_hz: float, source: str) -> np.ndarray:
+    if source == "csv_date_time":
+        assert sensors.timestamps_s is not None
+        return sensors.timestamps_s
+    return sensor_times_s(len(sensors), rate_hz)
+
+
 def build_alignment(
     video: VideoInfo,
     sensors: SensorTable | None,
@@ -107,6 +114,9 @@ def build_alignment(
     rows = len(sensors) if sensors is not None else 0
     if sensor_rate_hz:
         rate, source = float(sensor_rate_hz), "given"
+    elif sensors is not None and sensors.timestamps_s is not None and rows > 1:
+        span = float(sensors.timestamps_s[-1] - sensors.timestamps_s[0])
+        rate, source = (rows - 1) / span, "csv_date_time"
     elif rows and video.duration_s > 0:
         rate, source = rows / video.duration_s, "uniform_over_video"
     else:
@@ -115,7 +125,7 @@ def build_alignment(
     arc_sensor = None
     if sensors is not None and rows and rate > 0 and CURRENT_COLUMN in sensors.columns:
         arc_sensor = active_interval(
-            sensors.column(CURRENT_COLUMN), sensor_times_s(rows, rate)
+            sensors.column(CURRENT_COLUMN), aligned_sensor_times(sensors, rate, source)
         )
     arc_video = active_interval(video.brightness, video.frame_times_s())
     arc_audio = None

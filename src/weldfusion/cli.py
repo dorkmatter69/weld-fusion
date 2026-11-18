@@ -33,18 +33,20 @@ def cmd_scan(args) -> int:
 
 def cmd_convert(args) -> int:
     samples = discover_samples(args.root)
+    duplicate_stems = Counter(s.stem for s in samples)
     if args.limit:
         samples = samples[: args.limit]
     out_dir = Path(args.out)
     manifest, failures = [], 0
     for i, sample in enumerate(samples, 1):
-        target = out_dir / f"{sample.stem}.mcap"
+        target = out_dir / f"{sample.output_name(duplicate_stems[sample.stem] > 1)}.mcap"
         try:
             alignment = write_weld_mcap(
                 sample,
                 target,
                 sensor_rate_hz=args.sensor_hz,
                 embed_every=args.embed_every,
+                allow_unregistered_clocks=args.allow_unregistered_clocks,
             )
         except Exception as exc:  # keep going; report at the end
             failures += 1
@@ -53,6 +55,8 @@ def cmd_convert(args) -> int:
         manifest.append(
             {
                 "stem": sample.stem,
+                "source_subdir": sample.extra.get("relative_subdir"),
+                "manifest_record": sample.extra.get("manifest"),
                 "class_id": sample.class_id,
                 "class_name": sample.class_name,
                 "mcap": target.name,
@@ -90,6 +94,8 @@ def main(argv=None) -> int:
     p.add_argument("--embed-every", type=int, default=0,
                    help="embed every Nth frame as JPEG for viewing (0 = none)")
     p.add_argument("--limit", type=int, default=0, help="convert only the first N welds")
+    p.add_argument("--allow-unregistered-clocks", action="store_true",
+                   help="exploratory only: put separate sensor and video time origins on one MCAP axis")
     p.set_defaults(func=cmd_convert)
 
     p = sub.add_parser("inspect", help="summarise one MCAP file")
