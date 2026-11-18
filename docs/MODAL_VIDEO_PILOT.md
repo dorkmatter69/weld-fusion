@@ -67,6 +67,33 @@ of a single video, not a full-weld measurement. A previous worker run reported
 144.6 seconds and $0.044 on the same sample; the variation underscores that
 the extrapolation is approximate.
 
+## Export all pilot video features
+
+The isolated pilot bucket's signer also has the create-only
+`roles/storage.objectCreator` permission on that bucket. It has no
+overwrite or delete permission. The export signs an upload for
+`features/slowfast-r101-v015/<pilot-id>.npz` with a generation-match-zero
+precondition; an existing object makes the job stop. No service-account key
+is involved.
+
+With the same local `WELDOPS_*` variables used for the benchmark, run:
+
+```bash
+.venv/bin/modal run scripts/modal_slowfast_export.py
+```
+
+This job is restricted to the measured 1,119-frame pilot and processes all
+1,056 overlapping windows. It writes a compressed NumPy archive containing
+`features` (float32 [1056, 2304]), `window_start_frame`,
+`window_end_frame`, `window_center_seconds`, frame rate, frame count,
+sample ID, checkpoint, and MMAction2 version. Center time is the midpoint
+of each 64-frame window relative to the start of the AVI. The worker validates
+the array, uploads it directly to the isolated GCS bucket, reads it back
+through a second signed URL, and checks the SHA-256 digest. Only metadata
+and timings return to the local terminal. The source AVI never downloads
+to the Mac. The export has a 600-second Sandbox lifetime, one A10, and no
+automatic retry. Review the result before running additional welds.
+
 At the published A10 rate of $0.000306 per GPU-second, 10 minutes of GPU time
 is about $0.18. CPU, memory, image build, GCS transfer and possible regional
 charges are extra. The script's estimate uses that GPU rate only and is not a
