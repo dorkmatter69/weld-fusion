@@ -1,20 +1,22 @@
-"""Bounded, read-only one-weld SlowFast feature-throughput benchmark.
+"""Bounded one-weld SlowFast benchmark with a short-lived signed GCS URL.
 
-Run only after creating the `weldops-pilot-gcs` Modal Secret with the GCS
-HMAC keys documented in docs/MODAL_VIDEO_PILOT.md. No media is uploaded to
-Modal storage; the AVI is read from GCS inside the ephemeral container.
+The local entrypoint signs only the pilot AVI with GCP IAM credentials. No
+service-account key or HMAC key is created or stored in Modal.
 """
 
+import json
 import os
+import subprocess
 import time
-from pathlib import Path
 
 import modal
 
 
 SAMPLE_ID = os.environ.get("WELDOPS_SAMPLE_ID", "unset-sample")
 BUCKET = os.environ.get("WELDOPS_GCS_BUCKET", "unset-bucket")
-PREFIX = os.environ.get("WELDOPS_GCS_PREFIX", "unset-prefix/")
+PROJECT = os.environ.get("WELDOPS_GCP_PROJECT", "unset-project")
+SIGNER = os.environ.get("WELDOPS_SIGNING_SERVICE_ACCOUNT", "unset-signer")
+REGION = os.environ.get("WELDOPS_GCS_REGION", "us-west1")
 CHECKPOINT = (
     "https://download.openmmlab.com/mmaction/recognition/slowfast/"
     "slowfast_r101_4x16x1_256e_kinetics400_rgb/"
@@ -49,16 +51,6 @@ image = (
 )
 
 app = modal.App("weldops-slowfast-one-weld-benchmark")
-gcs_read_only = modal.CloudBucketMount(
-    BUCKET,
-    bucket_endpoint_url="https://storage.googleapis.com",
-    key_prefix=PREFIX,
-    secret=modal.Secret.from_name(
-        "weldops-pilot-gcs",
-        required_keys=["GOOGLE_ACCESS_KEY_ID", "GOOGLE_ACCESS_KEY_SECRET"],
-    ),
-    read_only=True,
-)
 
 
 def expected_windows(frame_count: int) -> int:
@@ -71,13 +63,36 @@ def expected_windows(frame_count: int) -> int:
     gpu="A10",
     cpu=2,
     memory=8192,
-    volumes={"/pilot": gcs_read_only},
     timeout=600,
     startup_timeout=900,
     retries=0,
     max_containers=1,
 )
-def benchmark(sample_id: str, max_windows: int = 16) -> dict:
+def benchmark(signed_url: str, sample_id: str, max_windows: int = 16) -> dict:
+    import tempfile
+    import urllib.request
+
+    if not 1 <= max_windows <= 32:
+        raise ValueError("max_windows must be between 1 and 32")
+    # The URL grants GET on one object for one hour. Never return or log it.
+    download_start = time.monotonic()
+    with tempfile.TemporaryDirectory() as directory:
+        path = os.path.join(directory, "pilot.avi")
+        try:
+            with urllib.request.urlopen(signed_url, timeout=60) as source, open(path, "wb") as target:
+                total_bytes = 0
+                while chunk := source.read(1024 * 1024):
+                    total_bytes += len(chunk)
+                    if total_bytes > 100 * 1024 * 1024:
+                        raise RuntimeError("pilot AVI exceeds 100 MiB limit")
+                    target.write(chunk)
+        except Exception:
+            raise RuntimeError("pilot AVI download failed; check the signed URL and expiry") from None
+        download_s = time.monotonic() - download_start
+        return _benchmark_local_video(path, sample_id, max_windows, download_s)
+
+
+def _benchmark_local_video(path: str, sample_id: str, max_windows: int, download_s: float) -> dict:
     import collections
 
     import cv2
@@ -86,12 +101,6 @@ def benchmark(sample_id: str, max_windows: int = 16) -> dict:
     import torch
     from mmaction.apis import init_recognizer
 
-    if not 1 <= max_windows <= 32:
-        raise ValueError("max_windows must be between 1 and 32")
-    path = Path("/pilot") / f"{sample_id}.avi"
-    if not path.is_file():
-        raise FileNotFoundError("pilot AVI is not available in the mounted prefix")
-
     cfg = mmcv.Config.fromfile(CONFIG)
     cfg.model.test_cfg = dict(feature_extraction=True)
     load_start = time.monotonic()
@@ -99,7 +108,7 @@ def benchmark(sample_id: str, max_windows: int = 16) -> dict:
     model.eval()
     load_s = time.monotonic() - load_start
 
-    cap = cv2.VideoCapture(str(path))
+    cap = cv2.VideoCapture(path)
     if not cap.isOpened():
         raise RuntimeError("could not open pilot AVI")
     total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
@@ -161,7 +170,7 @@ def benchmark(sample_id: str, max_windows: int = 16) -> dict:
 
     full_windows = expected_windows(total_frames)
     estimated_compute_s = (
-        load_s + decode_s / decoded_frames * (63 + full_windows)
+        download_s + load_s + decode_s / decoded_frames * (63 + full_windows)
         + (preprocess_s + inference_s) / completed * full_windows
     )
     return {
@@ -174,6 +183,7 @@ def benchmark(sample_id: str, max_windows: int = 16) -> dict:
         "full_stride_one_windows": full_windows,
         "benchmarked_windows": completed,
         "feature_dimension": 2304,
+        "download_s": round(download_s, 3),
         "model_load_s": round(load_s, 3),
         "decode_s": round(decode_s, 3),
         "preprocess_s": round(preprocess_s, 3),
@@ -186,12 +196,20 @@ def benchmark(sample_id: str, max_windows: int = 16) -> dict:
 
 @app.local_entrypoint()
 def main(max_windows: int = 16):
-    import json
-
-    if any(value.startswith("unset-") for value in (SAMPLE_ID, BUCKET, PREFIX)):
-        raise ValueError("set WELDOPS_SAMPLE_ID, WELDOPS_GCS_BUCKET and WELDOPS_GCS_PREFIX")
-    if not PREFIX.endswith("/"):
-        raise ValueError("WELDOPS_GCS_PREFIX must end with /")
+    if any(value.startswith("unset-") for value in (SAMPLE_ID, BUCKET, PROJECT, SIGNER)):
+        raise ValueError("set WELDOPS_SAMPLE_ID, WELDOPS_GCS_BUCKET, WELDOPS_GCP_PROJECT, and WELDOPS_SIGNING_SERVICE_ACCOUNT")
     if not 1 <= max_windows <= 32:
         raise ValueError("max_windows must be between 1 and 32")
-    print(json.dumps(benchmark.remote(SAMPLE_ID, max_windows), indent=2))
+    command = [
+        "gcloud", "storage", "sign-url",
+        f"gs://{BUCKET}/pilot/{SAMPLE_ID}.avi",
+        "--duration=1h", f"--project={PROJECT}", f"--region={REGION}",
+        f"--impersonate-service-account={SIGNER}", "--format=json",
+    ]
+    signed = subprocess.run(command, capture_output=True, text=True, check=True)
+    data = json.loads(signed.stdout)
+    row = data[0] if isinstance(data, list) else data
+    url = row.get("signed_url") or row.get("signedUrl") or row.get("url")
+    if not url or not url.startswith("https://"):
+        raise RuntimeError("gcloud did not return a signed HTTPS URL")
+    print(json.dumps(benchmark.remote(url, SAMPLE_ID, max_windows), indent=2))
