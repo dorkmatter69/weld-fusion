@@ -34,6 +34,10 @@ def inventory(archive: str | Path, output_dir: str | Path | None = None) -> dict
     total = largest = 0
     with tarfile.open(archive, "r|gz") as tar:
         for item in tar:
+            # A tar made from the current directory commonly starts with "./".
+            # It is a directory marker, not an output member.
+            if item.isdir() and item.name in (".", "./"):
+                continue
             name = _safe_name(item.name)
             if item.isdir():
                 continue

@@ -24,6 +24,24 @@ def test_inventory_and_extract(tmp_path):
     assert len(report["members"][0]["sha256"]) == 64
 
 
+def test_archive_with_dot_root_directory(tmp_path):
+    archive = tmp_path / "dot-root.tar.gz"
+    with tarfile.open(archive, "w:gz") as tar:
+        root = tarfile.TarInfo("./")
+        root.type = tarfile.DIRTYPE
+        tar.addfile(root)
+        folder = tarfile.TarInfo("./s1/")
+        folder.type = tarfile.DIRTYPE
+        tar.addfile(folder)
+        item = tarfile.TarInfo("./s1/a.csv")
+        item.size = 3
+        tar.addfile(item, io.BytesIO(b"abc"))
+    staged = tmp_path / "staged"
+    report = inventory(archive, staged)
+    assert report["member_count"] == 1
+    assert (staged / "s1/a.csv").read_bytes() == b"abc"
+
+
 @pytest.mark.parametrize("name", ["../escape", "/absolute", "data/../escape", "data\\escape"])
 def test_reject_unsafe_names(tmp_path, name):
     archive = tmp_path / "bad.tar.gz"

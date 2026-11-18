@@ -21,6 +21,9 @@ compressed archive once, checks member names and types, hashes decompressed
 bytes, and reports total and largest uncompressed member sizes. It does **not**
 verify the GCS object's own CRC32C: record the object's generation and checksum
 separately before download and verify the full download using cloud tooling.
+The scan decompresses and hashes the entire archive even without extraction.
+Allow substantial time for the 40 GB read; actual duration depends on disk,
+CPU and the archive's contents. Benchmark the worker before scheduling a run.
 
 ```bash
 python -m weldfusion.archive /data/intel_robotic_welding_dataset.tar.gz \
@@ -32,25 +35,32 @@ before choosing extraction disk. The optional `--output-dir` writes all
 original members to local staging and requires that full space. Do not run it
 on Cloud Shell's small home disk. Extraction currently does not upload to GCS,
 checkpoint an interrupted pass, or skip verified members; those remain the
-next deployment tasks for the full archive.
+next deployment tasks for the full archive. Re-running extraction reads the
+entire archive again and atomically **overwrites existing staged files**.
 
 ```bash
 python -m weldfusion.archive /data/intel_robotic_welding_dataset.tar.gz \
   /data/inventory.json --output-dir /data/staged
 ```
 
-## Eight-file pilot
+## One weld, eight files
 
-The extracted directory contains `<id>.csv`, `<id>.avi`, `<id>.flac` and
-`images/*.jpg`. Run:
+The observed pilot has one CSV, one AVI, one FLAC and five JPG images: eight
+files belonging to **one weld**, `04-01-23-0024-00`. Locate its directory under
+`/data/staged` using the archive-relative path recorded in `inventory.json`.
+The directory basename must match the CSV, AVI and FLAC basenames because the
+QC command constructs filenames from the directory name. For example, if the
+archive has `some/parent/04-01-23-0024-00/04-01-23-0024-00.csv`, run:
 
 ```bash
-python -m weldfusion.qc /data/04-01-23-0024-00 /data/qc/04-01-23-0024-00.json
+python -m weldfusion.qc /data/staged/some/parent/04-01-23-0024-00 \
+  /data/qc/04-01-23-0024-00.json
 ```
 
 The JSON records media duration, row/frame/sample counts, candidate active
 interval starts and ends, and the difference between sensor and video candidate
 events. These are screening results on **separate file-relative clocks**.
+The QC command does not read or validate the five post-weld JPGs.
 `status` stays `unresolved` and `clock_alignment_verified` stays false until
 independent anchors and a human reviewer justify a mapping. The JPG filenames
 are not synchronized timestamps. The tool returns a nonzero exit code if any
