@@ -64,8 +64,10 @@ spending ceiling. See https://modal.com/pricing for current rates.
   GPU execution have not been validated here.
 - The MMAction2 0.15 stack is old. Its pinned CUDA/PyTorch/MMCV wheel set may
   need repair in the remote image. The Sandbox image has not yet been built
-  successfully on Modal. Preserve the checkpoint and record any version
-  change before treating the result as paper-comparable.
+  and executed successfully end to end on Modal. The first Sandbox run reached
+  model import but lacked SciPy; it is now pinned in the image. Preserve the
+  checkpoint and record any version change before treating the result as
+  paper-comparable.
 - One video gives no estimate of how different resolution/duration sessions
   affect throughput. The benchmark uses a single crop and starts at frame 0;
   it does not measure validation AUC, training or three-stream alignment.
