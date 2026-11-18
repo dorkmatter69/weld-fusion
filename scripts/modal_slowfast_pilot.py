@@ -50,6 +50,25 @@ def expected_windows(frame_count: int) -> int:
     return max(0, frame_count - 63)
 
 
+def parse_benchmark_output(output: str) -> dict:
+    """Extract the single result record from MMAction's diagnostic stdout."""
+    results = []
+    for line in output.splitlines():
+        if not line.startswith("{"):
+            continue
+        try:
+            value = json.loads(line)
+        except json.JSONDecodeError:
+            continue
+        if isinstance(value, dict) and "benchmarked_windows" in value:
+            results.append(value)
+    if len(results) != 1:
+        raise RuntimeError(
+            "expected one benchmark JSON record, found {}".format(len(results))
+        )
+    return results[0]
+
+
 @app.local_entrypoint()
 def main(max_windows: int = 16):
     if any(value.startswith("unset-") for value in (SAMPLE_ID, BUCKET, PROJECT, SIGNER)):
@@ -96,7 +115,7 @@ def main(max_windows: int = 16):
             raise RuntimeError(
                 "SlowFast Sandbox failed (exit {}); inspect Modal build and runtime logs privately".format(status)
             )
-        result = json.loads(output)
+        result = parse_benchmark_output(output)
         if result["benchmarked_windows"] > max_windows or result["feature_dimension"] != 2304:
             raise RuntimeError("Sandbox returned an invalid benchmark result")
         print(json.dumps(result, indent=2))
