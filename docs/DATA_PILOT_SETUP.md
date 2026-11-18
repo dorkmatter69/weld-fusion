@@ -76,3 +76,28 @@ of the three main streams is absent or unreadable, while still writing QC JSON.
 Next, sample across labels and acquisition groups, review candidate arc-on and
 arc-off events, and benchmark worker duration and cost before a full run. The
 full GCS extraction/job orchestration has not been deployed.
+
+## If Cloud Shell is unavailable: Compute Engine pilot
+
+`scripts/build_gce_pilot_startup.py` generates a startup script containing the
+four local Python modules needed for QC. It does not embed credentials or media.
+A temporary Debian 12 VM in `us-west1-b` can run that script using the existing
+`weldops-transfer` service account. That account has object viewer and creator
+roles on the private bucket. The VM downloads only the three pilot streams to
+its own boot disk, installs Python dependencies, runs QC, and creates
+`gs://project-da693f7a-9b8c-40dd-a1d-weldops-data/qc/intel-welding/04-01-23-0024-00/qc-v1.json`.
+It refuses to overwrite that output. No private media is copied to a laptop.
+
+Building and syntax-checking the script are local and free:
+
+```bash
+python3 scripts/build_gce_pilot_startup.py /tmp/weldops-pilot-startup.sh
+bash -n /tmp/weldops-pilot-startup.sh
+```
+
+Creating the VM starts billing and executes the private-data job. Provisioning
+requires the project account to have Compute Engine instance creation and
+service-account-use permissions. The VM also needs outbound access to Debian
+and PyPI for `python3-venv`, NumPy, OpenCV, SoundFile and Google Cloud Storage's
+Python client. It should be deleted after the QC JSON or startup error has been
+reviewed. This alternative is **prepared but not provisioned or executed**.
