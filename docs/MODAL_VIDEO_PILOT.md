@@ -88,9 +88,11 @@ This job is restricted to the measured 1,119-frame pilot and processes all
 `window_end_frame`, `window_center_seconds`, frame rate, frame count,
 sample ID, checkpoint, and MMAction2 version. Center time is the midpoint
 of each 64-frame window relative to the start of the AVI. The worker validates
-the array, uploads it directly to the isolated GCS bucket, reads it back
-through a second signed URL, and checks the SHA-256 digest. Only metadata
-and timings return to the local terminal. The source AVI never downloads
+the array and uploads it directly to the isolated GCS bucket. The local
+entrypoint then checks the uploaded
+object's size and GCS MD5 metadata against the worker's values. The worker
+also reports a SHA-256 digest for provenance. Only metadata and timings
+return to the local terminal. The source AVI never downloads
 to the Mac. The export has a 600-second Sandbox lifetime, one A10, and no
 automatic retry. Review the result before running additional welds.
 
