@@ -1,9 +1,35 @@
 # Intel weld data pilot
 
 This workspace contains a one-pass archive inventory/extractor and a per-weld
-quality screen. They have **not** been executed on the private archive.
+quality screen. The three-stream pilot QC ran on one private weld; the full
+archive inventory and extraction have **not** been executed.
 Run them in a machine with adequate disk near the private GCS bucket. Keep the
 raw archive and media private and follow the dataset's research-use terms.
+
+## Dataset facts
+
+From the Hugging Face card for `IntelLabs/Intel_Robotic_Welding_Multimodal_Dataset`
+(arXiv 2409.02290), not yet confirmed against the private archive:
+
+- Licence: Intel Research Use License Agreement; research only, no commercial use.
+- About 39.9 GB across 236 welding sessions. Each session directory holds
+  sample directories, each with an AVI, a FLAC, a CSV and `images/` (5 post-weld JPGs).
+- Audio is 1 channel at 16 kHz FLAC. Video is a nominal 30 FPS AVI; the card
+  does not state resolution.
+- A manifest gives each sample's `CATEGORY` (12 classes including `Good`),
+  weld type, thickness, steel type, current, voltage, gas, robot speed,
+  `DIRECTORY`, `SUBDIRS` and `SPLIT`.
+- The card notes that labels were not validated after welding by a welding
+  expert, that one weld may contain several defects, and that devices started
+  by one script may still be slightly misaligned.
+
+The sensor CSV column names are not listed on the card. The pilot confirmed
+`Primary Weld Current` among the numeric sensor columns.
+
+Intel's `industrial-edge-insights-multimodal` weld simulator is not an
+alignment reference: it maps CSV rows to video frames by proportion of
+duration, replaces the CSV's `Date`/`Time` with publish wall-clock time, and
+does not read audio.
 
 ## Local setup
 
@@ -56,11 +82,12 @@ The observed pilot has one CSV, one AVI, one FLAC and five JPG images: eight
 files belonging to **one weld**, `04-01-23-0024-00`. Locate its directory under
 `/data/staged` using the archive-relative path recorded in `inventory.json`.
 The directory basename must match the CSV, AVI and FLAC basenames because the
-QC command constructs filenames from the directory name. For example, if the
-archive has `some/parent/04-01-23-0024-00/04-01-23-0024-00.csv`, run:
+QC command constructs filenames from the directory name. Per the dataset card,
+samples sit one level below a session directory. For example, if the archive has
+`<session>/04-01-23-0024-00/04-01-23-0024-00.csv`, run:
 
 ```bash
-python -m weldfusion.qc /data/staged/some/parent/04-01-23-0024-00 \
+python -m weldfusion.qc /data/staged/<session>/04-01-23-0024-00 \
   /data/qc/04-01-23-0024-00.json
 ```
 
@@ -74,8 +101,11 @@ are not synchronized timestamps. The tool returns a nonzero exit code if any
 of the three main streams is absent or unreadable, while still writing QC JSON.
 
 Next, sample across labels and acquisition groups, review candidate arc-on and
-arc-off events, and benchmark worker duration and cost before a full run. The
-full GCS extraction/job orchestration has not been deployed.
+arc-off events, and benchmark worker duration and cost before a full run. Draw
+the sample from the manifest's `CATEGORY`, `WELD_TYPE`, session `DIRECTORY` and
+`SPLIT` columns. Because labels are unvalidated and may hide multiple defects,
+do not treat stream agreement as label confirmation. The full GCS
+extraction/job orchestration has not been deployed.
 
 ## If Cloud Shell is unavailable: Compute Engine pilot
 
@@ -100,4 +130,10 @@ requires the project account to have Compute Engine instance creation and
 service-account-use permissions. The VM also needs outbound access to Debian
 and PyPI for `python3-venv`, NumPy, OpenCV, SoundFile and Google Cloud Storage's
 Python client. It should be deleted after the QC JSON or startup error has been
-reviewed. This alternative is **prepared but not provisioned or executed**.
+reviewed. The pilot ran on 2026-11-18 and the VM was deleted after it wrote
+the JSON. It found 335 sensor rows spanning 37.142 seconds, 1,119 video frames
+at 31 FPS (36.097 seconds), and 608,000 mono audio samples at 16 kHz
+(38 seconds). Candidate arc-on times were 6.145 seconds in sensor current,
+5.677 seconds in video brightness, and 4.750 seconds in audio energy. These
+are separate file-relative clocks; the result remains `unresolved`, with zero
+warnings. The report remains in the private bucket at the path above.
