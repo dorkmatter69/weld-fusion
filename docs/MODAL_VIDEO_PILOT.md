@@ -10,11 +10,13 @@ export, anomaly result or full reproduction. It uses the source model's
 single center crop; the paper does not fully specify preprocessing, so record
 this choice when comparing to its results.
 
-The job is limited to one A10 container, 32 windows at most, a 600-second
-function timeout, and no retries. Container startup/image building may take
-longer than the function timeout; Modal can bill for time outside the measured
-model execution. The source checkpoint and dependencies are downloaded to the
-container image, not to the private bucket.
+The job is limited to one A10 Sandbox, 32 windows at most and a 600-second
+Sandbox lifetime. Container startup/image building may take longer than the
+Sandbox timeout; Modal can bill for time outside the measured model execution.
+The source checkpoint and dependencies are downloaded to the container image,
+not to the private bucket. Modal's 2026.10 builder cannot add Python 3.8 to
+a Function, so the isolated GPU Sandbox uses the official legacy PyTorch image
+with its bundled Python.
 
 ## Bucket access without service-account keys
 
@@ -22,8 +24,9 @@ GCP's `iam.disableServiceAccountKeyCreation` policy prevents HMAC keys. Do not
 weaken it. The dedicated pilot bucket contains only the pilot AVI; its signer
 service account has read access to that bucket only. The local entrypoint uses
 `gcloud storage sign-url` and IAM's managed signing key to make a one-hour GET
-URL for that object. It passes that URL to a single ephemeral Modal function,
-which downloads no more than 100 MiB and deletes the temporary AVI when done.
+URL for that object. It injects that URL into a single ephemeral Modal Sandbox
+as a runtime Secret, which downloads no more than 100 MiB and deletes the
+temporary AVI when done.
 Do not paste the signed URL into chat or logs: anyone holding it can read that
 one file until expiry. No GCS or service-account key is stored in Modal.
 
@@ -44,7 +47,7 @@ is not in `us-west1`, also set `WELDOPS_GCS_REGION`. Then run:
 ```
 
 The local entrypoint signs the URL immediately before invoking Modal and never
-prints it. The function returns counts, checkpoint identity, model load time, decode,
+prints it. The Sandbox returns counts, checkpoint identity, model load time, decode,
 preprocessing and GPU inference times, and an estimated GPU charge for one
 weld. It returns no source frames or feature vectors. A failed image build or
 missing secret is a setup result, not a measurement; do not extrapolate it.
@@ -60,8 +63,9 @@ spending ceiling. See https://modal.com/pricing for current rates.
 - This source environment cannot reach Modal's server; image building and the
   GPU execution have not been validated here.
 - The MMAction2 0.15 stack is old. Its pinned CUDA/PyTorch/MMCV wheel set may
-  need repair in the remote image. Preserve the checkpoint and record any
-  version change before treating the result as paper-comparable.
+  need repair in the remote image. The Sandbox image has not yet been built
+  successfully on Modal. Preserve the checkpoint and record any version
+  change before treating the result as paper-comparable.
 - One video gives no estimate of how different resolution/duration sessions
   affect throughput. The benchmark uses a single crop and starts at frame 0;
   it does not measure validation AUC, training or three-stream alignment.
