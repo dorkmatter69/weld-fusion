@@ -1,6 +1,7 @@
 """Run the bounded SlowFast benchmark inside the legacy Python GPU Sandbox."""
 
 import collections
+import hashlib
 import json
 import os
 import tempfile
@@ -46,7 +47,7 @@ def benchmark(signed_url, sample_id, max_windows):
         return benchmark_video(path, sample_id, max_windows, download_s)
 
 
-def benchmark_video(path, sample_id, max_windows, download_s):
+def benchmark_video(path, sample_id, max_windows, download_s, export_path=None):
     import cv2
     import mmcv
     import numpy as np
@@ -69,6 +70,11 @@ def benchmark_video(path, sample_id, max_windows, download_s):
     fps = cap.get(cv2.CAP_PROP_FPS)
     if total_frames < 64 or fps <= 0:
         raise ValueError("video has too few frames or invalid frame rate")
+    full_windows = expected_windows(total_frames)
+    if export_path is not None and (total_frames != 1119 or abs(fps - 31.0) > 0.01
+                                    or max_windows != full_windows):
+        raise RuntimeError("export is restricted to the measured 1,119-frame pilot weld")
+    features = np.empty((full_windows, 2304), dtype=np.float32) if export_path else None
 
     mean = np.array([123.675, 116.28, 103.53], dtype=np.float32)
     std = np.array([58.395, 57.12, 57.375], dtype=np.float32)
@@ -108,6 +114,8 @@ def benchmark_video(path, sample_id, max_windows, download_s):
             inference_s += time.monotonic() - t
             if result.shape != (1, 2304):
                 raise RuntimeError("unexpected feature shape: {}".format(result.shape))
+            if features is not None:
+                features[index] = result[0]
             completed += 1
             if index + 1 < max_windows:
                 t = time.monotonic()
@@ -120,7 +128,24 @@ def benchmark_video(path, sample_id, max_windows, download_s):
     finally:
         cap.release()
 
-    full_windows = expected_windows(total_frames)
+    if features is not None:
+        if completed != full_windows or not np.isfinite(features).all():
+            raise RuntimeError("incomplete or nonfinite feature export")
+        start = np.arange(full_windows, dtype=np.int32)
+        center_seconds = (start.astype(np.float64) + 31.5) / fps
+        np.savez_compressed(
+            export_path, features=features, window_start_frame=start,
+            window_end_frame=start + 63, window_center_seconds=center_seconds,
+            fps=np.float64(fps), frame_count=np.int32(total_frames),
+            sample_id=np.array(sample_id), checkpoint=np.array(CHECKPOINT),
+            mmaction2_version=np.array("0.15.0"),
+        )
+        with np.load(export_path, allow_pickle=False) as saved:
+            if (saved["features"].shape != (full_windows, 2304)
+                    or saved["window_start_frame"][0] != 0
+                    or saved["window_end_frame"][-1] != total_frames - 1
+                    or not np.isfinite(saved["features"]).all()):
+                raise RuntimeError("saved feature archive failed validation")
     estimated_compute_s = (
         download_s + load_s + decode_s / decoded_frames * (63 + full_windows)
         + (preprocess_s + inference_s) / completed * full_windows
@@ -146,8 +171,75 @@ def benchmark_video(path, sample_id, max_windows, download_s):
     }
 
 
+def export_features(read_url, put_url, verify_url, sample_id, object_key):
+    with tempfile.TemporaryDirectory() as directory:
+        path = os.path.join(directory, "pilot.avi")
+        archive = os.path.join(directory, "slowfast_features.npz")
+        started = time.monotonic()
+        try:
+            with urllib.request.urlopen(read_url, timeout=60) as source, open(path, "wb") as target:
+                size = 0
+                while True:
+                    chunk = source.read(1024 * 1024)
+                    if not chunk:
+                        break
+                    size += len(chunk)
+                    if size > 100 * 1024 * 1024:
+                        raise RuntimeError("pilot AVI exceeds 100 MiB limit")
+                    target.write(chunk)
+        except Exception:
+            raise RuntimeError("pilot AVI download failed") from None
+
+        result = benchmark_video(
+            path, sample_id, 1056, time.monotonic() - started, export_path=archive
+        )
+        with open(archive, "rb") as source:
+            payload = source.read()
+        local_digest = hashlib.sha256(payload).hexdigest()
+        request = urllib.request.Request(
+            put_url, data=payload, method="PUT",
+            headers={"Content-Type": "application/octet-stream",
+                     "x-goog-if-generation-match": "0"},
+        )
+        try:
+            with urllib.request.urlopen(request, timeout=180) as response:
+                if response.status not in (200, 201):
+                    raise RuntimeError("unexpected upload status")
+        except Exception:
+            raise RuntimeError("feature upload failed; check signer create permission and object existence") from None
+
+        digest = hashlib.sha256()
+        try:
+            with urllib.request.urlopen(verify_url, timeout=60) as response:
+                while True:
+                    chunk = response.read(1024 * 1024)
+                    if not chunk:
+                        break
+                    digest.update(chunk)
+        except Exception:
+            raise RuntimeError("uploaded feature readback failed") from None
+        if digest.hexdigest() != local_digest:
+            raise RuntimeError("uploaded feature checksum mismatch")
+        result.update({
+            "output_object": object_key,
+            "output_bytes": len(payload),
+            "sha256": local_digest,
+            "verified_readback": True,
+            "first_center_s": round(31.5 / result["fps"], 6),
+            "last_center_s": round((1055 + 31.5) / result["fps"], 6),
+        })
+        return result
+
+
 if __name__ == "__main__":
     url = os.environ.pop("PILOT_SIGNED_URL")
     sample = os.environ["PILOT_SAMPLE_ID"]
-    limit = int(os.environ["PILOT_MAX_WINDOWS"])
-    print(json.dumps(benchmark(url, sample, limit)), flush=True)
+    if os.environ.get("PILOT_EXPORT") == "1":
+        print(json.dumps(export_features(
+            url, os.environ.pop("PILOT_PUT_URL"),
+            os.environ.pop("PILOT_VERIFY_URL"), sample,
+            os.environ["PILOT_OUTPUT_OBJECT"],
+        )), flush=True)
+    else:
+        limit = int(os.environ["PILOT_MAX_WINDOWS"])
+        print(json.dumps(benchmark(url, sample, limit)), flush=True)
