@@ -59,6 +59,8 @@ def main(max_windows: int = 16):
     if not 1 <= max_windows <= 32:
         raise ValueError("max_windows must be between 1 and 32")
 
+    # Build before signing: old dependency downloads can exceed URL lifetime.
+    image.build(app)
     command = [
         "gcloud", "storage", "sign-url",
         f"gs://{BUCKET}/pilot/{SAMPLE_ID}.avi",
@@ -87,7 +89,8 @@ def main(max_windows: int = 16):
     )
     try:
         output = sandbox.stdout.read()
-        status = sandbox.wait()
+        sandbox.wait()
+        status = sandbox.returncode
         if status != 0:
             raise RuntimeError(
                 "SlowFast Sandbox failed (exit {}); inspect Modal build and runtime logs privately".format(status)
