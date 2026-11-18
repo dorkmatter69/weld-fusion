@@ -16,36 +16,35 @@ longer than the function timeout; Modal can bill for time outside the measured
 model execution. The source checkpoint and dependencies are downloaded to the
 container image, not to the private bucket.
 
-## Bucket access
+## Bucket access without service-account keys
 
-The Modal account token authenticates *to Modal only*. The worker also needs
-read access to the private pilot path. Set up a GCS HMAC key for a dedicated service
-account limited to reading the required bucket objects, then create a Modal
-Secret named `weldops-pilot-gcs` with exactly these keys:
+GCP's `iam.disableServiceAccountKeyCreation` policy prevents HMAC keys. Do not
+weaken it. The dedicated pilot bucket contains only the pilot AVI; its signer
+service account has read access to that bucket only. The local entrypoint uses
+`gcloud storage sign-url` and IAM's managed signing key to make a one-hour GET
+URL for that object. It passes that URL to a single ephemeral Modal function,
+which downloads no more than 100 MiB and deletes the temporary AVI when done.
+Do not paste the signed URL into chat or logs: anyone holding it can read that
+one file until expiry. No GCS or service-account key is stored in Modal.
 
-- `GOOGLE_ACCESS_KEY_ID`
-- `GOOGLE_ACCESS_KEY_SECRET`
-
-Use the GCP and Modal web consoles to enter the credentials; never paste them
-into chat, the repository, shell history, or a checked-in `.env`. The mount is
-read-only and rooted at the `WELDOPS_GCS_PREFIX` value provided locally.
-The existing VM service account's bucket-level objectViewer role is broader
-than an ideal pilot-only grant; create a dedicated principal or condition before
-using it with Modal. Review Intel's research-use terms and GCP-to-Modal data
-transfer before enabling access.
+The user account running `gcloud` needs `roles/iam.serviceAccountTokenCreator`
+on the dedicated signer (not on the whole project). The pilot bucket and this
+IAM binding were created for the one-weld benchmark. Review Intel's research-use
+terms and GCP-to-Modal data transfer before execution.
 
 ## Run
 
-From the repository root, after the script is available in the canonical
-checkout and the Modal Secret exists, set `WELDOPS_SAMPLE_ID`,
-`WELDOPS_GCS_BUCKET`, and `WELDOPS_GCS_PREFIX` in your local shell (the prefix
-must end in `/`). Then run:
+From the repository root, after pulling the latest branch, set
+`WELDOPS_SAMPLE_ID`, `WELDOPS_GCS_BUCKET`, `WELDOPS_GCP_PROJECT`, and
+`WELDOPS_SIGNING_SERVICE_ACCOUNT` in your local shell. If your isolated bucket
+is not in `us-west1`, also set `WELDOPS_GCS_REGION`. Then run:
 
 ```bash
 .venv/bin/modal run scripts/modal_slowfast_pilot.py --max-windows 16
 ```
 
-The function returns counts, checkpoint identity, model load time, decode,
+The local entrypoint signs the URL immediately before invoking Modal and never
+prints it. The function returns counts, checkpoint identity, model load time, decode,
 preprocessing and GPU inference times, and an estimated GPU charge for one
 weld. It returns no source frames or feature vectors. A failed image build or
 missing secret is a setup result, not a measurement; do not extrapolate it.
