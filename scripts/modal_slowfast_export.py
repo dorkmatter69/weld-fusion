@@ -52,18 +52,16 @@ def main():
     if "404" not in check.stderr:
         raise RuntimeError("could not verify that the feature object is absent")
 
-    # Build first so all three one-hour signed URLs are fresh for the GPU run.
+    # Build first so the one-hour signed URLs are fresh for the GPU run.
     pilot.image.build(app)
     get_url = sign_url("pilot/{}.avi".format(pilot.SAMPLE_ID))
     put_url = sign_url(
         OUTPUT_KEY, "PUT",
         "content-type=application/octet-stream,x-goog-if-generation-match=0",
     )
-    verify_url = sign_url(OUTPUT_KEY)
     secret = modal.Secret.from_dict({
         "PILOT_SIGNED_URL": get_url,
         "PILOT_PUT_URL": put_url,
-        "PILOT_VERIFY_URL": verify_url,
     })
     sandbox = modal.Sandbox.create(
         "python", "/opt/slowfast_pilot_worker.py",
@@ -87,9 +85,17 @@ def main():
         result = pilot.parse_benchmark_output(output)
         if (result["benchmarked_windows"] != 1056
                 or result["feature_dimension"] != 2304
-                or result["output_object"] != OUTPUT_KEY
-                or result["verified_readback"] is not True):
+                or result["output_object"] != OUTPUT_KEY):
             raise RuntimeError("feature export verification failed")
+        metadata = subprocess.run(
+            ["gcloud", "storage", "objects", "describe", object_uri, "--format=json"],
+            capture_output=True, text=True, check=True,
+        )
+        stored = json.loads(metadata.stdout)
+        if (str(stored.get("size")) != str(result["output_bytes"])
+                or stored.get("md5_hash") != result["md5_base64"]):
+            raise RuntimeError("GCS size or MD5 does not match the exported feature file")
+        result["verified_gcs_checksum"] = True
         print(json.dumps(result, indent=2))
     finally:
         sandbox.terminate()
