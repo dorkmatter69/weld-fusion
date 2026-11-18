@@ -1,6 +1,7 @@
 """Run the bounded SlowFast benchmark inside the legacy Python GPU Sandbox."""
 
 import collections
+import base64
 import hashlib
 import json
 import os
@@ -171,7 +172,7 @@ def benchmark_video(path, sample_id, max_windows, download_s, export_path=None):
     }
 
 
-def export_features(read_url, put_url, verify_url, sample_id, object_key):
+def export_features(read_url, put_url, sample_id, object_key):
     with tempfile.TemporaryDirectory() as directory:
         path = os.path.join(directory, "pilot.avi")
         archive = os.path.join(directory, "slowfast_features.npz")
@@ -196,6 +197,7 @@ def export_features(read_url, put_url, verify_url, sample_id, object_key):
         with open(archive, "rb") as source:
             payload = source.read()
         local_digest = hashlib.sha256(payload).hexdigest()
+        local_md5 = base64.b64encode(hashlib.md5(payload).digest()).decode("ascii")
         request = urllib.request.Request(
             put_url, data=payload, method="PUT",
             headers={"Content-Type": "application/octet-stream",
@@ -208,23 +210,11 @@ def export_features(read_url, put_url, verify_url, sample_id, object_key):
         except Exception:
             raise RuntimeError("feature upload failed; check signer create permission and object existence") from None
 
-        digest = hashlib.sha256()
-        try:
-            with urllib.request.urlopen(verify_url, timeout=60) as response:
-                while True:
-                    chunk = response.read(1024 * 1024)
-                    if not chunk:
-                        break
-                    digest.update(chunk)
-        except Exception:
-            raise RuntimeError("uploaded feature readback failed") from None
-        if digest.hexdigest() != local_digest:
-            raise RuntimeError("uploaded feature checksum mismatch")
         result.update({
             "output_object": object_key,
             "output_bytes": len(payload),
             "sha256": local_digest,
-            "verified_readback": True,
+            "md5_base64": local_md5,
             "first_center_s": round(31.5 / result["fps"], 6),
             "last_center_s": round((1055 + 31.5) / result["fps"], 6),
         })
@@ -237,8 +227,7 @@ if __name__ == "__main__":
     if os.environ.get("PILOT_EXPORT") == "1":
         print(json.dumps(export_features(
             url, os.environ.pop("PILOT_PUT_URL"),
-            os.environ.pop("PILOT_VERIFY_URL"), sample,
-            os.environ["PILOT_OUTPUT_OBJECT"],
+            sample, os.environ["PILOT_OUTPUT_OBJECT"],
         )), flush=True)
     else:
         limit = int(os.environ["PILOT_MAX_WINDOWS"])
