@@ -155,7 +155,8 @@ not be committed.
    partitions are audited. Forecast only future sensor readings from prior
    measurements. Choose an anomaly threshold on validation welds and evaluate
    held-out weld-level detection and delay. Never treat this dashboard's
-   synthetic logistic AUC as a measured Timestral result.
+   synthetic logistic AUC as a measured Timestral result. The bounded one-CSV
+   forecasting smoke test and access steps are in [TIMESTRAL_SENSOR_PILOT.md](TIMESTRAL_SENSOR_PILOT.md).
 
 ## Verify
 
