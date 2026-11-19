@@ -1,7 +1,7 @@
 import {validateIndex,filterSegments,nearest} from "./embedding-core.mjs";
 const $=id=>document.getElementById(id);
 let index=null,selected=null,demo=false;
-function optionValues(id, values){$(id).replaceChildren(new Option(`All ${id}s`,""), ...[...new Set(values)].sort().map(v=>new Option(v,v)));}
+function optionValues(id, values){const all={split:'All splits',category:'All categories',session:'All sessions'};$(id).replaceChildren(new Option(all[id],""), ...[...new Set(values)].sort().map(v=>new Option(v,v)));}
 function filters(){return {split:$('split').value,category:$('category').value,session:$('session').value,search:$('search').value};}
 function render(){
   if(!index)return;
