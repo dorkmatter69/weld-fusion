@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://weldops.example/schemas/weld-episode.v1.json",
+  "title": "WeldEpisode v1",
+  "type": "object",
+  "required": ["schema_version", "episode_id", "source", "process", "recipe", "timeline", "streams", "telemetry", "events", "reviews"],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "episode_id": {"type": "string", "minLength": 1},
+    "source": {"type": "object", "required": ["kind"], "properties": {"kind": {"enum": ["recorded", "simulation"]}}},
+    "process": {"type": "object"},
+    "recipe": {"type": "object"},
+    "labels": {"type": "object"},
+    "timeline": {"type": "object", "required": ["time_basis", "clock_alignment_verified"], "properties": {"time_basis": {"type": "string"}, "clock_alignment_verified": {"type": "boolean"}}},
+    "streams": {"type": "object"},
+    "telemetry": {"type": "array", "items": {"type": "object", "required": ["time_s"], "properties": {"time_s": {"type": "number", "minimum": 0}}}},
+    "events": {"type": "array", "items": {"type": "object"}},
+    "reviews": {"type": "array", "items": {"type": "object"}}
+  }
+}

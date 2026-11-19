@@ -1,5 +1,60 @@
 # weldfusion
 
+## WeldOps integration prototype
+
+This branch now carries the original `weld_twin` MuJoCo flat-coupon simulator
+from the unversioned `~/Developer/weld-twin` directory alongside the Intel
+loader and MCAP converter. The simulator's source and tests were copied without
+changing that original directory. Install `.[sim]` for the MuJoCo/pyads
+dependencies; the browser demo never imports or connects to `AdsPLC`.
+
+Run the browser demo from the repository root:
+
+    python3 -m http.server 8765 --directory web
+
+Open `http://localhost:8765`. Its built-in animation offers scripted synthetic
+telemetry, virtual PLC states, four fault injections, and three separate deterministic reviews with
+an adjudication summary. These are rules, not trained agents or physical weld
+quality decisions. Use the file picker to load a `WeldEpisode` JSON file.
+
+To load a trace from the actual copied MuJoCo and Python `MockPLC` implementation:
+
+    python -m weldfusion.sim_export mujoco-episode.json --seed 0
+
+Then open `mujoco-episode.json` with the browser file picker. This offline bridge
+preserves the Python simulator's distinct behavior; the built-in JavaScript
+fault animation is not the MuJoCo or Python PLC implementation.
+
+The shared JSON shape is `contract/weld-episode.schema.json`. To export the
+private Intel pilot after obtaining its files and dataset `manifest.csv`:
+
+    python -m weldfusion.episode_export /path/to/04-01-23-0024-00 pilot.json \
+      --manifest /path/to/manifest.csv \
+      --gcs-prefix gs://project-da693f7a-9b8c-40dd-a1d-weldops-data/pilot/intel-welding/04-01-23-0024-00
+
+Recorded episodes preserve measured sensor intervals and explicitly mark
+camera, audio, sensor, and post-weld image clock alignment as unverified. The
+browser displays the imported sensor telemetry but does not fetch private GCS
+media; that requires an authenticated backend. No Intel data is checked in.
+
+To make the original `~/Developer/weld-twin` directory canonical after review,
+run `bash scripts/migrate_canonical.sh` from this staged repository on the
+same Mac. It first commits the original simulator on `legacy/simulator` in
+that directory, then checks out the existing GitHub `feat/virtual-cell-mvp`
+history and applies this integration commit. It refuses an already versioned
+directory or a remote branch that has moved. The script has not been run on
+the original directory from this restricted workspace.
+
+The Intel loader joins full-dataset `manifest.csv` rows by subdirectory and
+keeps same-named sample IDs in different directories separate, including
+distinct MCAP filenames. The manifest's category text is retained; non-Good
+defect status/class IDs stay unknown until the full label vocabulary is audited.
+Full-dataset
+conversion has not been run. MCAP conversion refuses timestamped records by
+default because sensor and camera time origins are unregistered. Explicit
+`--allow-unregistered-clocks` permits exploratory output but still does not
+calibrate clocks. Do not interpret its event offset as a device-clock offset.
+
 Package 1 of the multimodal weld-defect case study: find the welds in the
 Intel Robotic Welding Multimodal Dataset, put each weld's video, sensor and
 audio streams on one timeline, and write one MCAP file per weld.
@@ -21,6 +76,8 @@ Useful `convert` options:
   in Foxglove. Without it the MCAP holds signals only and stays small.
 - `--sensor-hz R` sets the sensor rate instead of inferring it.
 - `--limit N` converts only the first N welds.
+- `--allow-unregistered-clocks` permits exploratory MCAP creation from real
+  timestamped sensor files; their camera and sensor origins remain unaligned.
 
 To try it without the dataset:
 
@@ -58,15 +115,22 @@ Suite (one per class; two of them fetched with video):
 
 ## Assumptions to confirm on the full dataset
 
-1. Sensor rows are spread evenly over the video duration. Intel's own
-   simulator makes the same assumption. If the full CSVs include a Time
-   column, use it instead; the loader currently drops Date and Time.
+1. The full dataset pilot CSV contains Date and Time readings; the loader now
+   preserves their measured intervals relative to the first sensor row.
+   The camera-to-sensor clock offset remains unknown. Older public samples
+   without timestamps still spread rows evenly over the video duration.
 2. Audio shares the video's start time. Check `arc_on_audio_s` against
    `arc_on_video_s` in the manifest once audio is available.
 3. Class id 03 is porosity. It is absent from the sample subset.
 
 The offsets are recorded, not applied. Decide on a correction after looking
 at their distribution across the full dataset.
+
+The extracted pilot sample `04-01-23-0024-00` has 335 readings over 37.142 s,
+and its FLAC has 608000 samples at 16 kHz (38 s). Its five JPG filenames
+indicate April 3, while its sensor CSV says April 1; do not treat filename
+timestamps as synchronized capture times without further evidence. The pilot
+is a fillet weld, not a pipe-spool weld.
 
 ## Licence note
 
