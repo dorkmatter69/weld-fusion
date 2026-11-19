@@ -89,3 +89,39 @@ or training features.
 Whole-weld anomaly score fusion can be evaluated after authoritative labels
 are found, even while per-frame clocks remain unresolved. Any per-frame
 audio/video/sensor fusion requires the verified mapping first.
+
+## Review artifacts and manifest audit
+
+The pilot plot was generated from the exploratory MCAP by
+`scripts/plot_pilot_clock_evidence.py` and stored privately at
+`gs://project-da693f7a-9b8c-40dd-a1d-modal-weld-pilot/review/04-01-23-0024-00/clock-evidence-v1.png`.
+Each panel starts at its own file's zero; dashed lines mark the screening
+thresholds, not ground-truth synchronous events. The image makes the onset
+and offset discrepancies visible. No clock model has been applied.
+
+The archive's `raid/intel_robotic_welding_dataset/manifest.csv` was read in a
+GCP worker without extracting the 40 GB archive. Its SHA-256 is
+`9c4fb4df70bb137fc851dd858ac22d53eed86ba08c3806d7177e40b300406826`
+(587,626 bytes). Exactly one row in that manifest matched the pilot sample:
+`CATEGORY=Good`, `SPLIT=TRAIN`, `WELD_TYPE=FILLET`, and
+`SUBDIRS=2_good_weld_2_02-09-23_Fe410/04-01-23-0024-00`. The private evidence
+is `gs://project-da693f7a-9b8c-40dd-a1d-weldops-data/qc/intel-welding/04-01-23-0024-00/manifest-evidence-v1.json`.
+This is an authoritative **declared dataset label/split**, not an independent
+verification of the physical weld quality. The exploratory MCAP is unchanged
+and continues to report an unverified label and unaligned clocks; consumers
+should join the audited manifest evidence by the sample ID rather than infer
+a label from its filename.
+
+The temporary GCE manifest worker was removed after the result was saved.
+The streaming audit inspected the first archive member named `manifest.csv`
+and checked for a unique matching row within it; it did not prove that the
+archive contains no additional manifest files.
+
+Intel's Manufacturing AI Suite `fusion-analytics/fusion.py` is a useful
+reference for **live decision fusion**: it matches MQTT vision and time-series
+model outputs by UTC timestamps within a configurable tolerance (50 ms by
+default), then applies AND or OR to anomaly decisions. Its vision timestamps
+come from RTP sender NTP metadata. Our pilot files have no verified common
+clock or online model outputs, so that matcher is not applicable to these
+raw recordings yet. The paper's whole-weld audio/video score fusion is a
+separate evaluation step.
