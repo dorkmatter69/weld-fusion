@@ -89,12 +89,29 @@ This job is restricted to the measured 1,119-frame pilot and processes all
 sample ID, checkpoint, and MMAction2 version. Center time is the midpoint
 of each 64-frame window relative to the start of the AVI. The worker validates
 the array and uploads it directly to the isolated GCS bucket. The local
-entrypoint then checks the uploaded
-object's size and GCS MD5 metadata against the worker's values. The worker
+entrypoint then checks the uploaded object's size and GCS MD5 metadata
+against the worker's values. The worker
 also reports a SHA-256 digest for provenance. Only metadata and timings
 return to the local terminal. The source AVI never downloads
 to the Mac. The export has a 600-second Sandbox lifetime, one A10, and no
 automatic retry. Review the result before running additional welds.
+
+### Completed pilot export
+
+The user ran the export successfully and shared the terminal result. The
+saved object is `features/slowfast-r101-v015/04-01-23-0024-00.npz`.
+It is 8,644,803 bytes and contains 1,056 validated 2,304-dimensional
+feature vectors. Its SHA-256, computed by the worker, is
+`3591c5c5d58c661a583bcada201fe64135bba03809636fd3416be04aedc5009d`.
+The worker's MD5 was `UBsPh/uZivft+85WXbAQpw==`. An independent
+GCS metadata read confirmed that MD5, object size, and content type.
+The measured categories totaled about 85.9 seconds: 38.707 seconds of
+preprocessing, 38.873 seconds of GPU inference, 6.930 seconds of model
+loading, 0.717 seconds of video decoding, and 0.697 seconds downloading
+the pilot AVI. The script's GPU-only rate calculation was $0.026; this
+is not a Modal invoice and excludes other charges. Relative video
+window centers span 1.016129–35.048387 seconds. They are not aligned
+to sensor or audio clocks.
 
 At the published A10 rate of $0.000306 per GPU-second, 10 minutes of GPU time
 is about $0.18. CPU, memory, image build, GCS transfer and possible regional
@@ -104,10 +121,11 @@ spending ceiling. See https://modal.com/pricing for current rates.
 ## Known limits
 
 - This source environment cannot reach Modal's server. The user ran the
-  benchmark successfully on their Modal account and shared its output.
+  benchmark and export successfully on their Modal account and shared
+  the outputs.
 - The MMAction2 0.15 stack is old. Its pinned CUDA/PyTorch/MMCV wheel set may
   need repair in future environments. Preserve the checkpoint and record any
   version change before treating the result as paper-comparable.
 - One video gives no estimate of how different resolution/duration sessions
-  affect throughput. The benchmark uses a single crop and starts at frame 0;
+  affect throughput. The exporter uses a single crop and starts at frame 0;
   it does not measure validation AUC, training or three-stream alignment.
