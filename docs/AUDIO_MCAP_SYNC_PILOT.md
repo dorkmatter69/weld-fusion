@@ -33,6 +33,21 @@ and MD5 metadata. The worker prints SHA-256 digests. The pilot's category and
 train/validation/test split remain `null` until an authoritative manifest
 record is audited. Do not infer a Good training label from the file stem.
 
+## Completed pilot run
+
+The user ran the CPU exporter successfully. The audio feature archive has
+889 frames × 684 bins, spans 0.042656–37.949156 seconds on the FLAC's own
+clock, and is 2,194,781 bytes. Its worker-computed SHA-256 is
+`1f292c0f6804c1479452301f207be4c5fa7486078679ae70b2a73f2c90cf1e2d`.
+The exploratory MCAP is 83,709 bytes and contains 335 sensor messages,
+1,119 video brightness messages, 760 audio RMS messages, and one metadata
+and alignment message each. Its SHA-256 is
+`499cae728e007a99d4363212e0a947518aa48ac19a4b7626c6737141e74fd28f`.
+An independent GCS metadata read confirmed both object sizes and MD5 values.
+The exporter returned `clock_alignment_verified: false`, `category: null`,
+and `split: null`. These outputs are feature preparation and exploratory
+recording, not anomaly detection or validated synchronization.
+
 ## Are the streams synchronized?
 
 **No.** The file lengths and candidate arc boundaries are currently:
