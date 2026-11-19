@@ -17,6 +17,7 @@ dependencies = [
 [project.optional-dependencies]
 dev = ["pytest>=7"]
 sim = ["mujoco", "pyads"]
+research = ["torch>=2.2", "sentence-transformers[image,audio,video]>=6.1", "scikit-learn>=1.4"]
 
 [project.scripts]
 weldfusion = "weldfusion.cli:main"

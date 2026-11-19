@@ -1,0 +1,16 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>WeldOps · Embedding review</title>
+  <link rel="stylesheet" href="embeddings.css">
+</head>
+<body>
+  <main>
+    <header><div><div class="eyebrow">WELDOPS / RESEARCH REVIEW</div><h1>Embedding explorer</h1><p>Filter weld moments and inspect nearest neighbors from a local EmbeddingGemma 2 index.</p></div><nav><a href="fusion.html">Fusion laboratory ↗</a> · <a href="index.html">Virtual cell ↗</a></nav></header>
+    <section class="toolbar"><label class="file">Load local index JSON<input id="file" type="file" accept=".json,application/json"></label><button id="demo" type="button">Explore synthetic demo</button><label>Split<select id="split"><option value="">All splits</option></select></label><label>Category<select id="category"><option value="">All categories</option></select></label><label>Session<select id="session"><option value="">All sessions</option></select></label><label>Modality<select id="mode"><option value="video">Video</option><option value="audio">Audio</option></select></label><label>Search ID<input id="search" type="search" placeholder="Weld or segment ID"></label></section>
+    <p id="status" role="status">Load an index generated on your authorized data worker. No media or vectors are sent by this page.</p>
+    <div class="stats"><article><strong id="segments">0</strong><span>Visible segments</span></article><article><strong id="welds">0</strong><span>Welds</span></article><article><strong id="classes">0</strong><span>Categories</span></article><article><strong id="alignment">Unknown</strong><span>Clock alignment</span></article></div>
+    <div class="layout"><section><div class="section-title"><h2>Segments</h2><small>Choose a row to compare embeddings</small></div><div class="table-wrap"><table><thead><tr><th>Weld</th><th>Interval (file time)</th><th>Split</th><th>Category</th><th>Session</th></tr></thead><tbody id="rows"></tbody></table></div></section><section><h2>Nearest neighbors</h2><p id="selection">Select a segment to inspect cosine similarity. Results use the chosen modality only.</p><ol id="neighbors"></ol><p class="note">Similarity is a search aid, not a defect probability or proof of clock alignment. Labels are from the supplied manifest, not predicted by EmbeddingGemma.</p></section></div>
+  </main><script type="module" src="embeddings.mjs"></script>
+</body></html>

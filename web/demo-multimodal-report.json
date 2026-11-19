@@ -1,0 +1,5382 @@
+{
+  "protocol": "synthetic_multimodal_fusion_v1",
+  "seed": 42,
+  "data_kind": "simulation",
+  "training": "supervised_synthetic_only",
+  "clock_alignment": "affine_from_three_landmarks_fourth_held_out",
+  "clock_evidence": {
+    "independent_holdout_passed": true,
+    "source": "synthetic_landmarks"
+  },
+  "fusion_gate": {
+    "aligned_fusion_allowed": true,
+    "reason": "simulated independent clock landmarks passed"
+  },
+  "modality_profiles": {
+    "video": {
+      "representation": "continuous brightness proxy",
+      "structure": "temporal",
+      "task_relevance_hypothesis": "arc appearance",
+      "elements_per_episode": 100,
+      "median_rate_hz": 5.004,
+      "max_held_out_clock_residual_ms": 19.17,
+      "missing_window_fraction": 0.0,
+      "noise_and_uncertainty": "simulated sample noise and device-clock fit error"
+    },
+    "audio": {
+      "representation": "continuous energy proxy",
+      "structure": "temporal",
+      "task_relevance_hypothesis": "acoustic events",
+      "elements_per_episode": 500,
+      "median_rate_hz": 24.998,
+      "max_held_out_clock_residual_ms": 24.41,
+      "missing_window_fraction": 0.0,
+      "noise_and_uncertainty": "simulated sample noise and device-clock fit error"
+    },
+    "sensor": {
+      "representation": "two continuous process channels",
+      "structure": "temporal",
+      "task_relevance_hypothesis": "current and gas flow",
+      "elements_per_episode": 200,
+      "median_rate_hz": 9.994,
+      "max_held_out_clock_residual_ms": 19.183,
+      "missing_window_fraction": 0.0,
+      "noise_and_uncertainty": "simulated sample noise and device-clock fit error"
+    }
+  },
+  "session_count": 12,
+  "splits": {
+    "TRAIN": 64,
+    "VALIDATION": 16,
+    "TEST": 16
+  },
+  "late_video_weight_selected_on_validation": 0.0,
+  "results": {
+    "late_video": {
+      "auc": 0.7968505477308294,
+      "precision_at_0_5": 0.0,
+      "recall_at_0_5": 0.0,
+      "positive_windows": 36,
+      "negative_windows": 284
+    },
+    "late_audio": {
+      "auc": 0.9456181533646323,
+      "precision_at_0_5": 1.0,
+      "recall_at_0_5": 0.1111111111111111,
+      "positive_windows": 36,
+      "negative_windows": 284
+    },
+    "late_sensor": {
+      "auc": 0.7789514866979655,
+      "precision_at_0_5": 0.0,
+      "recall_at_0_5": 0.0,
+      "positive_windows": 36,
+      "negative_windows": 284
+    },
+    "continuous": {
+      "auc": 0.9553012519561815,
+      "precision_at_0_5": 1.0,
+      "recall_at_0_5": 0.5833333333333334,
+      "positive_windows": 36,
+      "negative_windows": 284
+    },
+    "tokenized": {
+      "auc": 0.91554186228482,
+      "precision_at_0_5": 0.8,
+      "recall_at_0_5": 0.3333333333333333,
+      "positive_windows": 36,
+      "negative_windows": 284
+    },
+    "uncalibrated_continuous": {
+      "auc": 0.9302621283255086,
+      "precision_at_0_5": 1.0,
+      "recall_at_0_5": 0.5555555555555556,
+      "positive_windows": 36,
+      "negative_windows": 284
+    },
+    "late_fusion": {
+      "auc": 0.9456181533646323,
+      "precision_at_0_5": 1.0,
+      "recall_at_0_5": 0.1111111111111111,
+      "positive_windows": 36,
+      "negative_windows": 284
+    }
+  },
+  "per_category": {
+    "Overlap": {
+      "late_video": {
+        "auc": 0.893581081081081,
+        "precision_at_0_5": 0.0,
+        "recall_at_0_5": 0.0,
+        "positive_windows": 12,
+        "negative_windows": 148
+      },
+      "late_audio": {
+        "auc": 0.9493243243243243,
+        "precision_at_0_5": 0.0,
+        "recall_at_0_5": 0.0,
+        "positive_windows": 12,
+        "negative_windows": 148
+      },
+      "late_sensor": {
+        "auc": 0.8536036036036037,
+        "precision_at_0_5": 0.0,
+        "recall_at_0_5": 0.0,
+        "positive_windows": 12,
+        "negative_windows": 148
+      },
+      "continuous": {
+        "auc": 0.9543918918918919,
+        "precision_at_0_5": 1.0,
+        "recall_at_0_5": 0.5833333333333334,
+        "positive_windows": 12,
+        "negative_windows": 148
+      },
+      "tokenized": {
+        "auc": 0.893581081081081,
+        "precision_at_0_5": 0.6666666666666666,
+        "recall_at_0_5": 0.3333333333333333,
+        "positive_windows": 12,
+        "negative_windows": 148
+      },
+      "uncalibrated_continuous": {
+        "auc": 0.9594594594594594,
+        "precision_at_0_5": 1.0,
+        "recall_at_0_5": 0.6666666666666666,
+        "positive_windows": 12,
+        "negative_windows": 148
+      },
+      "late_fusion": {
+        "auc": 0.9493243243243243,
+        "precision_at_0_5": 0.0,
+        "recall_at_0_5": 0.0,
+        "positive_windows": 12,
+        "negative_windows": 148
+      }
+    },
+    "Gas loss": {
+      "late_video": {
+        "auc": 0.7184684684684685,
+        "precision_at_0_5": 0.0,
+        "recall_at_0_5": 0.0,
+        "positive_windows": 12,
+        "negative_windows": 148
+      },
+      "late_audio": {
+        "auc": 0.9065315315315315,
+        "precision_at_0_5": 0.0,
+        "recall_at_0_5": 0.0,
+        "positive_windows": 12,
+        "negative_windows": 148
+      },
+      "late_sensor": {
+        "auc": 0.8530405405405406,
+        "precision_at_0_5": 0.0,
+        "recall_at_0_5": 0.0,
+        "positive_windows": 12,
+        "negative_windows": 148
+      },
+      "continuous": {
+        "auc": 0.9256756756756757,
+        "precision_at_0_5": 1.0,
+        "recall_at_0_5": 0.6666666666666666,
+        "positive_windows": 12,
+        "negative_windows": 148
+      },
+      "tokenized": {
+        "auc": 0.9073761261261262,
+        "precision_at_0_5": 0.7,
+        "recall_at_0_5": 0.5833333333333334,
+        "positive_windows": 12,
+        "negative_windows": 148
+      },
+      "uncalibrated_continuous": {
+        "auc": 0.9498873873873874,
+        "precision_at_0_5": 1.0,
+        "recall_at_0_5": 0.5,
+        "positive_windows": 12,
+        "negative_windows": 148
+      },
+      "late_fusion": {
+        "auc": 0.9065315315315315,
+        "precision_at_0_5": 0.0,
+        "recall_at_0_5": 0.0,
+        "positive_windows": 12,
+        "negative_windows": 148
+      }
+    },
+    "Spatter": {
+      "late_video": {
+        "auc": 0.7364864864864865,
+        "precision_at_0_5": 0.0,
+        "recall_at_0_5": 0.0,
+        "positive_windows": 12,
+        "negative_windows": 148
+      },
+      "late_audio": {
+        "auc": 0.954954954954955,
+        "precision_at_0_5": 1.0,
+        "recall_at_0_5": 0.3333333333333333,
+        "positive_windows": 12,
+        "negative_windows": 148
+      },
+      "late_sensor": {
+        "auc": 0.6615990990990991,
+        "precision_at_0_5": 0.0,
+        "recall_at_0_5": 0.0,
+        "positive_windows": 12,
+        "negative_windows": 148
+      },
+      "continuous": {
+        "auc": 0.9583333333333334,
+        "precision_at_0_5": 1.0,
+        "recall_at_0_5": 0.5,
+        "positive_windows": 12,
+        "negative_windows": 148
+      },
+      "tokenized": {
+        "auc": 0.8916103603603603,
+        "precision_at_0_5": 0.3333333333333333,
+        "recall_at_0_5": 0.08333333333333333,
+        "positive_windows": 12,
+        "negative_windows": 148
+      },
+      "uncalibrated_continuous": {
+        "auc": 0.8947072072072072,
+        "precision_at_0_5": 1.0,
+        "recall_at_0_5": 0.5,
+        "positive_windows": 12,
+        "negative_windows": 148
+      },
+      "late_fusion": {
+        "auc": 0.954954954954955,
+        "precision_at_0_5": 1.0,
+        "recall_at_0_5": 0.3333333333333333,
+        "positive_windows": 12,
+        "negative_windows": 148
+      }
+    }
+  },
+  "test_windows": [
+    {
+      "episode_id": "synthetic-s10-w00",
+      "session_id": "synthetic-s10",
+      "category": "Gas loss",
+      "time_s": 0.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.033893,
+        "late_audio": 0.011412,
+        "late_sensor": 0.036511,
+        "continuous": 0.012701,
+        "tokenized": 0.022699,
+        "uncalibrated_continuous": 0.01023,
+        "late_fusion": 0.011412
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w00",
+      "session_id": "synthetic-s10",
+      "category": "Gas loss",
+      "time_s": 1.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.023806,
+        "late_audio": 0.012265,
+        "late_sensor": 0.040929,
+        "continuous": 0.012843,
+        "tokenized": 0.021864,
+        "uncalibrated_continuous": 0.012422,
+        "late_fusion": 0.012265
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w00",
+      "session_id": "synthetic-s10",
+      "category": "Gas loss",
+      "time_s": 2.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.055923,
+        "late_audio": 0.009858,
+        "late_sensor": 0.038768,
+        "continuous": 0.014201,
+        "tokenized": 0.022699,
+        "uncalibrated_continuous": 0.008973,
+        "late_fusion": 0.009858
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w00",
+      "session_id": "synthetic-s10",
+      "category": "Gas loss",
+      "time_s": 3.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.250933,
+        "late_audio": 0.143721,
+        "late_sensor": 0.154248,
+        "continuous": 0.159747,
+        "tokenized": 0.102769,
+        "uncalibrated_continuous": 0.010755,
+        "late_fusion": 0.143721
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w00",
+      "session_id": "synthetic-s10",
+      "category": "Gas loss",
+      "time_s": 4.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.243625,
+        "late_audio": 0.13814,
+        "late_sensor": 0.159992,
+        "continuous": 0.153739,
+        "tokenized": 0.162474,
+        "uncalibrated_continuous": 0.183213,
+        "late_fusion": 0.13814
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w00",
+      "session_id": "synthetic-s10",
+      "category": "Gas loss",
+      "time_s": 5.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.273048,
+        "late_audio": 0.157484,
+        "late_sensor": 0.1544,
+        "continuous": 0.195066,
+        "tokenized": 0.102769,
+        "uncalibrated_continuous": 0.183604,
+        "late_fusion": 0.157484
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w00",
+      "session_id": "synthetic-s10",
+      "category": "Gas loss",
+      "time_s": 6.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.240324,
+        "late_audio": 0.166322,
+        "late_sensor": 0.15921,
+        "continuous": 0.177371,
+        "tokenized": 0.107052,
+        "uncalibrated_continuous": 0.213892,
+        "late_fusion": 0.166322
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w00",
+      "session_id": "synthetic-s10",
+      "category": "Gas loss",
+      "time_s": 7.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.276542,
+        "late_audio": 0.147673,
+        "late_sensor": 0.157635,
+        "continuous": 0.189586,
+        "tokenized": 0.235122,
+        "uncalibrated_continuous": 0.20358,
+        "late_fusion": 0.147673
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w00",
+      "session_id": "synthetic-s10",
+      "category": "Gas loss",
+      "time_s": 8.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.225643,
+        "late_audio": 0.126121,
+        "late_sensor": 0.148677,
+        "continuous": 0.112277,
+        "tokenized": 0.067411,
+        "uncalibrated_continuous": 0.162046,
+        "late_fusion": 0.126121
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w00",
+      "session_id": "synthetic-s10",
+      "category": "Gas loss",
+      "time_s": 9.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.223469,
+        "late_audio": 0.160453,
+        "late_sensor": 0.165745,
+        "continuous": 0.180837,
+        "tokenized": 0.279725,
+        "uncalibrated_continuous": 0.161904,
+        "late_fusion": 0.160453
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w00",
+      "session_id": "synthetic-s10",
+      "category": "Gas loss",
+      "time_s": 10.5,
+      "label": 1,
+      "scores": {
+        "late_video": 0.176489,
+        "late_audio": 0.160121,
+        "late_sensor": 0.153779,
+        "continuous": 0.126291,
+        "tokenized": 0.041849,
+        "uncalibrated_continuous": 0.247234,
+        "late_fusion": 0.160121
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w00",
+      "session_id": "synthetic-s10",
+      "category": "Gas loss",
+      "time_s": 11.5,
+      "label": 1,
+      "scores": {
+        "late_video": 0.256646,
+        "late_audio": 0.320464,
+        "late_sensor": 0.221181,
+        "continuous": 0.847269,
+        "tokenized": 0.672867,
+        "uncalibrated_continuous": 0.618274,
+        "late_fusion": 0.320464
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w00",
+      "session_id": "synthetic-s10",
+      "category": "Gas loss",
+      "time_s": 12.5,
+      "label": 1,
+      "scores": {
+        "late_video": 0.245293,
+        "late_audio": 0.361387,
+        "late_sensor": 0.216184,
+        "continuous": 0.864423,
+        "tokenized": 0.672867,
+        "uncalibrated_continuous": 0.767925,
+        "late_fusion": 0.361387
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w00",
+      "session_id": "synthetic-s10",
+      "category": "Gas loss",
+      "time_s": 13.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.263163,
+        "late_audio": 0.13754,
+        "late_sensor": 0.159664,
+        "continuous": 0.164583,
+        "tokenized": 0.162474,
+        "uncalibrated_continuous": 0.302928,
+        "late_fusion": 0.13754
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w00",
+      "session_id": "synthetic-s10",
+      "category": "Gas loss",
+      "time_s": 14.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.197462,
+        "late_audio": 0.151502,
+        "late_sensor": 0.1493,
+        "continuous": 0.132545,
+        "tokenized": 0.102769,
+        "uncalibrated_continuous": 0.186671,
+        "late_fusion": 0.151502
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w00",
+      "session_id": "synthetic-s10",
+      "category": "Gas loss",
+      "time_s": 15.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.240891,
+        "late_audio": 0.172753,
+        "late_sensor": 0.148121,
+        "continuous": 0.183892,
+        "tokenized": 0.107052,
+        "uncalibrated_continuous": 0.15858,
+        "late_fusion": 0.172753
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w00",
+      "session_id": "synthetic-s10",
+      "category": "Gas loss",
+      "time_s": 16.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.220027,
+        "late_audio": 0.154226,
+        "late_sensor": 0.14527,
+        "continuous": 0.172296,
+        "tokenized": 0.235122,
+        "uncalibrated_continuous": 0.256047,
+        "late_fusion": 0.154226
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w00",
+      "session_id": "synthetic-s10",
+      "category": "Gas loss",
+      "time_s": 17.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.031247,
+        "late_audio": 0.011201,
+        "late_sensor": 0.037788,
+        "continuous": 0.011758,
+        "tokenized": 0.022699,
+        "uncalibrated_continuous": 0.045274,
+        "late_fusion": 0.011201
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w00",
+      "session_id": "synthetic-s10",
+      "category": "Gas loss",
+      "time_s": 18.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.033004,
+        "late_audio": 0.010014,
+        "late_sensor": 0.038492,
+        "continuous": 0.011893,
+        "tokenized": 0.022699,
+        "uncalibrated_continuous": 0.010782,
+        "late_fusion": 0.010014
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w00",
+      "session_id": "synthetic-s10",
+      "category": "Gas loss",
+      "time_s": 19.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.028216,
+        "late_audio": 0.010308,
+        "late_sensor": 0.037932,
+        "continuous": 0.011541,
+        "tokenized": 0.021864,
+        "uncalibrated_continuous": 0.010398,
+        "late_fusion": 0.010308
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w01",
+      "session_id": "synthetic-s10",
+      "category": "Spatter",
+      "time_s": 0.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.025121,
+        "late_audio": 0.007744,
+        "late_sensor": 0.026423,
+        "continuous": 0.009217,
+        "tokenized": 0.021864,
+        "uncalibrated_continuous": 0.00838,
+        "late_fusion": 0.007744
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w01",
+      "session_id": "synthetic-s10",
+      "category": "Spatter",
+      "time_s": 1.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.022454,
+        "late_audio": 0.010673,
+        "late_sensor": 0.028861,
+        "continuous": 0.011787,
+        "tokenized": 0.021864,
+        "uncalibrated_continuous": 0.009843,
+        "late_fusion": 0.010673
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w01",
+      "session_id": "synthetic-s10",
+      "category": "Spatter",
+      "time_s": 2.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.030656,
+        "late_audio": 0.011235,
+        "late_sensor": 0.030377,
+        "continuous": 0.010109,
+        "tokenized": 0.049506,
+        "uncalibrated_continuous": 0.011345,
+        "late_fusion": 0.011235
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w01",
+      "session_id": "synthetic-s10",
+      "category": "Spatter",
+      "time_s": 3.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.148804,
+        "late_audio": 0.135196,
+        "late_sensor": 0.106789,
+        "continuous": 0.068672,
+        "tokenized": 0.01804,
+        "uncalibrated_continuous": 0.081535,
+        "late_fusion": 0.135196
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w01",
+      "session_id": "synthetic-s10",
+      "category": "Spatter",
+      "time_s": 4.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.156008,
+        "late_audio": 0.136028,
+        "late_sensor": 0.111504,
+        "continuous": 0.079562,
+        "tokenized": 0.044988,
+        "uncalibrated_continuous": 0.075844,
+        "late_fusion": 0.136028
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w01",
+      "session_id": "synthetic-s10",
+      "category": "Spatter",
+      "time_s": 5.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.186414,
+        "late_audio": 0.129285,
+        "late_sensor": 0.109704,
+        "continuous": 0.076819,
+        "tokenized": 0.048007,
+        "uncalibrated_continuous": 0.080702,
+        "late_fusion": 0.129285
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w01",
+      "session_id": "synthetic-s10",
+      "category": "Spatter",
+      "time_s": 6.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.16513,
+        "late_audio": 0.135404,
+        "late_sensor": 0.119986,
+        "continuous": 0.086965,
+        "tokenized": 0.044988,
+        "uncalibrated_continuous": 0.096609,
+        "late_fusion": 0.135404
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w01",
+      "session_id": "synthetic-s10",
+      "category": "Spatter",
+      "time_s": 7.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.134879,
+        "late_audio": 0.13773,
+        "late_sensor": 0.10854,
+        "continuous": 0.072991,
+        "tokenized": 0.039959,
+        "uncalibrated_continuous": 0.090027,
+        "late_fusion": 0.13773
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w01",
+      "session_id": "synthetic-s10",
+      "category": "Spatter",
+      "time_s": 8.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.154919,
+        "late_audio": 0.148769,
+        "late_sensor": 0.118543,
+        "continuous": 0.091549,
+        "tokenized": 0.027061,
+        "uncalibrated_continuous": 0.080506,
+        "late_fusion": 0.148769
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w01",
+      "session_id": "synthetic-s10",
+      "category": "Spatter",
+      "time_s": 9.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.159995,
+        "late_audio": 0.120626,
+        "late_sensor": 0.11211,
+        "continuous": 0.066421,
+        "tokenized": 0.01725,
+        "uncalibrated_continuous": 0.094796,
+        "late_fusion": 0.120626
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w01",
+      "session_id": "synthetic-s10",
+      "category": "Spatter",
+      "time_s": 10.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.130115,
+        "late_audio": 0.150243,
+        "late_sensor": 0.105133,
+        "continuous": 0.067618,
+        "tokenized": 0.025077,
+        "uncalibrated_continuous": 0.202104,
+        "late_fusion": 0.150243
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w01",
+      "session_id": "synthetic-s10",
+      "category": "Spatter",
+      "time_s": 11.5,
+      "label": 1,
+      "scores": {
+        "late_video": 0.181829,
+        "late_audio": 0.429542,
+        "late_sensor": 0.120559,
+        "continuous": 0.485096,
+        "tokenized": 0.156906,
+        "uncalibrated_continuous": 0.547185,
+        "late_fusion": 0.429542
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w01",
+      "session_id": "synthetic-s10",
+      "category": "Spatter",
+      "time_s": 12.5,
+      "label": 1,
+      "scores": {
+        "late_video": 0.193594,
+        "late_audio": 0.526407,
+        "late_sensor": 0.106522,
+        "continuous": 0.60753,
+        "tokenized": 0.348399,
+        "uncalibrated_continuous": 0.266914,
+        "late_fusion": 0.526407
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w01",
+      "session_id": "synthetic-s10",
+      "category": "Spatter",
+      "time_s": 13.5,
+      "label": 1,
+      "scores": {
+        "late_video": 0.175267,
+        "late_audio": 0.192014,
+        "late_sensor": 0.118202,
+        "continuous": 0.148145,
+        "tokenized": 0.156906,
+        "uncalibrated_continuous": 0.103181,
+        "late_fusion": 0.192014
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w01",
+      "session_id": "synthetic-s10",
+      "category": "Spatter",
+      "time_s": 14.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.184888,
+        "late_audio": 0.146339,
+        "late_sensor": 0.113064,
+        "continuous": 0.090326,
+        "tokenized": 0.073996,
+        "uncalibrated_continuous": 0.095258,
+        "late_fusion": 0.146339
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w01",
+      "session_id": "synthetic-s10",
+      "category": "Spatter",
+      "time_s": 15.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.120236,
+        "late_audio": 0.121488,
+        "late_sensor": 0.113899,
+        "continuous": 0.05128,
+        "tokenized": 0.015272,
+        "uncalibrated_continuous": 0.057645,
+        "late_fusion": 0.121488
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w01",
+      "session_id": "synthetic-s10",
+      "category": "Spatter",
+      "time_s": 16.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.146414,
+        "late_audio": 0.14501,
+        "late_sensor": 0.10914,
+        "continuous": 0.072664,
+        "tokenized": 0.028288,
+        "uncalibrated_continuous": 0.015934,
+        "late_fusion": 0.14501
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w01",
+      "session_id": "synthetic-s10",
+      "category": "Spatter",
+      "time_s": 17.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.019374,
+        "late_audio": 0.01148,
+        "late_sensor": 0.026782,
+        "continuous": 0.011677,
+        "tokenized": 0.021864,
+        "uncalibrated_continuous": 0.00939,
+        "late_fusion": 0.01148
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w01",
+      "session_id": "synthetic-s10",
+      "category": "Spatter",
+      "time_s": 18.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.019201,
+        "late_audio": 0.008227,
+        "late_sensor": 0.026676,
+        "continuous": 0.010007,
+        "tokenized": 0.021864,
+        "uncalibrated_continuous": 0.007889,
+        "late_fusion": 0.008227
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w01",
+      "session_id": "synthetic-s10",
+      "category": "Spatter",
+      "time_s": 19.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.018246,
+        "late_audio": 0.00899,
+        "late_sensor": 0.028202,
+        "continuous": 0.009235,
+        "tokenized": 0.021864,
+        "uncalibrated_continuous": 0.00824,
+        "late_fusion": 0.00899
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w02",
+      "session_id": "synthetic-s10",
+      "category": "Good",
+      "time_s": 0.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.029296,
+        "late_audio": 0.011048,
+        "late_sensor": 0.042394,
+        "continuous": 0.011897,
+        "tokenized": 0.021864,
+        "uncalibrated_continuous": 0.009971,
+        "late_fusion": 0.011048
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w02",
+      "session_id": "synthetic-s10",
+      "category": "Good",
+      "time_s": 1.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.027503,
+        "late_audio": 0.011038,
+        "late_sensor": 0.041395,
+        "continuous": 0.011646,
+        "tokenized": 0.021864,
+        "uncalibrated_continuous": 0.009812,
+        "late_fusion": 0.011038
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w02",
+      "session_id": "synthetic-s10",
+      "category": "Good",
+      "time_s": 2.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.03213,
+        "late_audio": 0.008351,
+        "late_sensor": 0.040301,
+        "continuous": 0.0112,
+        "tokenized": 0.022699,
+        "uncalibrated_continuous": 0.021604,
+        "late_fusion": 0.008351
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w02",
+      "session_id": "synthetic-s10",
+      "category": "Good",
+      "time_s": 3.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.287135,
+        "late_audio": 0.161486,
+        "late_sensor": 0.151058,
+        "continuous": 0.210209,
+        "tokenized": 0.102769,
+        "uncalibrated_continuous": 0.043822,
+        "late_fusion": 0.161486
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w02",
+      "session_id": "synthetic-s10",
+      "category": "Good",
+      "time_s": 4.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.201525,
+        "late_audio": 0.132038,
+        "late_sensor": 0.165229,
+        "continuous": 0.113346,
+        "tokenized": 0.087244,
+        "uncalibrated_continuous": 0.17806,
+        "late_fusion": 0.132038
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w02",
+      "session_id": "synthetic-s10",
+      "category": "Good",
+      "time_s": 5.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.190441,
+        "late_audio": 0.148556,
+        "late_sensor": 0.159757,
+        "continuous": 0.12975,
+        "tokenized": 0.102769,
+        "uncalibrated_continuous": 0.155279,
+        "late_fusion": 0.148556
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w02",
+      "session_id": "synthetic-s10",
+      "category": "Good",
+      "time_s": 6.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.204872,
+        "late_audio": 0.137109,
+        "late_sensor": 0.165534,
+        "continuous": 0.121764,
+        "tokenized": 0.087244,
+        "uncalibrated_continuous": 0.123522,
+        "late_fusion": 0.137109
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w02",
+      "session_id": "synthetic-s10",
+      "category": "Good",
+      "time_s": 7.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.197725,
+        "late_audio": 0.146383,
+        "late_sensor": 0.162064,
+        "continuous": 0.131402,
+        "tokenized": 0.102769,
+        "uncalibrated_continuous": 0.178584,
+        "late_fusion": 0.146383
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w02",
+      "session_id": "synthetic-s10",
+      "category": "Good",
+      "time_s": 8.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.213288,
+        "late_audio": 0.164149,
+        "late_sensor": 0.179083,
+        "continuous": 0.169236,
+        "tokenized": 0.131538,
+        "uncalibrated_continuous": 0.149077,
+        "late_fusion": 0.164149
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w02",
+      "session_id": "synthetic-s10",
+      "category": "Good",
+      "time_s": 9.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.206061,
+        "late_audio": 0.132233,
+        "late_sensor": 0.169873,
+        "continuous": 0.116874,
+        "tokenized": 0.087244,
+        "uncalibrated_continuous": 0.172606,
+        "late_fusion": 0.132233
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w02",
+      "session_id": "synthetic-s10",
+      "category": "Good",
+      "time_s": 10.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.231808,
+        "late_audio": 0.13921,
+        "late_sensor": 0.146752,
+        "continuous": 0.126699,
+        "tokenized": 0.070336,
+        "uncalibrated_continuous": 0.110528,
+        "late_fusion": 0.13921
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w02",
+      "session_id": "synthetic-s10",
+      "category": "Good",
+      "time_s": 11.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.239251,
+        "late_audio": 0.139847,
+        "late_sensor": 0.153571,
+        "continuous": 0.142519,
+        "tokenized": 0.067411,
+        "uncalibrated_continuous": 0.169708,
+        "late_fusion": 0.139847
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w02",
+      "session_id": "synthetic-s10",
+      "category": "Good",
+      "time_s": 12.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.223731,
+        "late_audio": 0.159034,
+        "late_sensor": 0.171885,
+        "continuous": 0.172811,
+        "tokenized": 0.126413,
+        "uncalibrated_continuous": 0.18339,
+        "late_fusion": 0.159034
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w02",
+      "session_id": "synthetic-s10",
+      "category": "Good",
+      "time_s": 13.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.231556,
+        "late_audio": 0.149677,
+        "late_sensor": 0.15396,
+        "continuous": 0.162223,
+        "tokenized": 0.235122,
+        "uncalibrated_continuous": 0.183592,
+        "late_fusion": 0.149677
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w02",
+      "session_id": "synthetic-s10",
+      "category": "Good",
+      "time_s": 14.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.197111,
+        "late_audio": 0.145155,
+        "late_sensor": 0.162788,
+        "continuous": 0.132549,
+        "tokenized": 0.102769,
+        "uncalibrated_continuous": 0.131791,
+        "late_fusion": 0.145155
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w02",
+      "session_id": "synthetic-s10",
+      "category": "Good",
+      "time_s": 15.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.185873,
+        "late_audio": 0.128977,
+        "late_sensor": 0.15923,
+        "continuous": 0.101761,
+        "tokenized": 0.067411,
+        "uncalibrated_continuous": 0.160591,
+        "late_fusion": 0.128977
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w02",
+      "session_id": "synthetic-s10",
+      "category": "Good",
+      "time_s": 16.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.197172,
+        "late_audio": 0.145775,
+        "late_sensor": 0.157589,
+        "continuous": 0.130453,
+        "tokenized": 0.102769,
+        "uncalibrated_continuous": 0.021841,
+        "late_fusion": 0.145775
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w02",
+      "session_id": "synthetic-s10",
+      "category": "Good",
+      "time_s": 17.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.02401,
+        "late_audio": 0.011347,
+        "late_sensor": 0.042602,
+        "continuous": 0.012463,
+        "tokenized": 0.021864,
+        "uncalibrated_continuous": 0.017504,
+        "late_fusion": 0.011347
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w02",
+      "session_id": "synthetic-s10",
+      "category": "Good",
+      "time_s": 18.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.028027,
+        "late_audio": 0.010212,
+        "late_sensor": 0.040726,
+        "continuous": 0.011361,
+        "tokenized": 0.021864,
+        "uncalibrated_continuous": 0.010035,
+        "late_fusion": 0.010212
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w02",
+      "session_id": "synthetic-s10",
+      "category": "Good",
+      "time_s": 19.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.032385,
+        "late_audio": 0.011318,
+        "late_sensor": 0.043551,
+        "continuous": 0.013163,
+        "tokenized": 0.022699,
+        "uncalibrated_continuous": 0.010687,
+        "late_fusion": 0.011318
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w03",
+      "session_id": "synthetic-s10",
+      "category": "Overlap",
+      "time_s": 0.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.021155,
+        "late_audio": 0.010952,
+        "late_sensor": 0.051093,
+        "continuous": 0.012478,
+        "tokenized": 0.023651,
+        "uncalibrated_continuous": 0.011449,
+        "late_fusion": 0.010952
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w03",
+      "session_id": "synthetic-s10",
+      "category": "Overlap",
+      "time_s": 1.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.018152,
+        "late_audio": 0.009711,
+        "late_sensor": 0.048022,
+        "continuous": 0.009357,
+        "tokenized": 0.023651,
+        "uncalibrated_continuous": 0.009906,
+        "late_fusion": 0.009711
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w03",
+      "session_id": "synthetic-s10",
+      "category": "Overlap",
+      "time_s": 2.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.024661,
+        "late_audio": 0.011933,
+        "late_sensor": 0.054137,
+        "continuous": 0.013369,
+        "tokenized": 0.023651,
+        "uncalibrated_continuous": 0.005122,
+        "late_fusion": 0.011933
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w03",
+      "session_id": "synthetic-s10",
+      "category": "Overlap",
+      "time_s": 3.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.176177,
+        "late_audio": 0.1317,
+        "late_sensor": 0.194311,
+        "continuous": 0.112649,
+        "tokenized": 0.032199,
+        "uncalibrated_continuous": 0.015356,
+        "late_fusion": 0.1317
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w03",
+      "session_id": "synthetic-s10",
+      "category": "Overlap",
+      "time_s": 4.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.160478,
+        "late_audio": 0.157513,
+        "late_sensor": 0.203064,
+        "continuous": 0.140529,
+        "tokenized": 0.050079,
+        "uncalibrated_continuous": 0.144705,
+        "late_fusion": 0.157513
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w03",
+      "session_id": "synthetic-s10",
+      "category": "Overlap",
+      "time_s": 5.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.206517,
+        "late_audio": 0.147763,
+        "late_sensor": 0.202555,
+        "continuous": 0.160377,
+        "tokenized": 0.126413,
+        "uncalibrated_continuous": 0.171162,
+        "late_fusion": 0.147763
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w03",
+      "session_id": "synthetic-s10",
+      "category": "Overlap",
+      "time_s": 6.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.149648,
+        "late_audio": 0.163513,
+        "late_sensor": 0.18643,
+        "continuous": 0.131869,
+        "tokenized": 0.050079,
+        "uncalibrated_continuous": 0.127698,
+        "late_fusion": 0.163513
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w03",
+      "session_id": "synthetic-s10",
+      "category": "Overlap",
+      "time_s": 7.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.144531,
+        "late_audio": 0.149498,
+        "late_sensor": 0.190204,
+        "continuous": 0.107661,
+        "tokenized": 0.052294,
+        "uncalibrated_continuous": 0.147959,
+        "late_fusion": 0.149498
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w03",
+      "session_id": "synthetic-s10",
+      "category": "Overlap",
+      "time_s": 8.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.200456,
+        "late_audio": 0.14823,
+        "late_sensor": 0.182025,
+        "continuous": 0.138205,
+        "tokenized": 0.131538,
+        "uncalibrated_continuous": 0.142415,
+        "late_fusion": 0.14823
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w03",
+      "session_id": "synthetic-s10",
+      "category": "Overlap",
+      "time_s": 9.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.18596,
+        "late_audio": 0.166701,
+        "late_sensor": 0.192422,
+        "continuous": 0.163605,
+        "tokenized": 0.131538,
+        "uncalibrated_continuous": 0.182666,
+        "late_fusion": 0.166701
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w03",
+      "session_id": "synthetic-s10",
+      "category": "Overlap",
+      "time_s": 10.5,
+      "label": 1,
+      "scores": {
+        "late_video": 0.166152,
+        "late_audio": 0.178968,
+        "late_sensor": 0.180566,
+        "continuous": 0.162734,
+        "tokenized": 0.050079,
+        "uncalibrated_continuous": 0.16454,
+        "late_fusion": 0.178968
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w03",
+      "session_id": "synthetic-s10",
+      "category": "Overlap",
+      "time_s": 11.5,
+      "label": 1,
+      "scores": {
+        "late_video": 0.361865,
+        "late_audio": 0.375657,
+        "late_sensor": 0.239041,
+        "continuous": 0.795886,
+        "tokenized": 0.722112,
+        "uncalibrated_continuous": 0.591247,
+        "late_fusion": 0.375657
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w03",
+      "session_id": "synthetic-s10",
+      "category": "Overlap",
+      "time_s": 12.5,
+      "label": 1,
+      "scores": {
+        "late_video": 0.324225,
+        "late_audio": 0.33029,
+        "late_sensor": 0.228932,
+        "continuous": 0.667052,
+        "tokenized": 0.503339,
+        "uncalibrated_continuous": 0.737339,
+        "late_fusion": 0.33029
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w03",
+      "session_id": "synthetic-s10",
+      "category": "Overlap",
+      "time_s": 13.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.129942,
+        "late_audio": 0.164003,
+        "late_sensor": 0.191381,
+        "continuous": 0.110264,
+        "tokenized": 0.046488,
+        "uncalibrated_continuous": 0.249485,
+        "late_fusion": 0.164003
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w03",
+      "session_id": "synthetic-s10",
+      "category": "Overlap",
+      "time_s": 14.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.179505,
+        "late_audio": 0.158021,
+        "late_sensor": 0.19395,
+        "continuous": 0.137328,
+        "tokenized": 0.052294,
+        "uncalibrated_continuous": 0.149864,
+        "late_fusion": 0.158021
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w03",
+      "session_id": "synthetic-s10",
+      "category": "Overlap",
+      "time_s": 15.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.191789,
+        "late_audio": 0.146922,
+        "late_sensor": 0.179565,
+        "continuous": 0.130536,
+        "tokenized": 0.131538,
+        "uncalibrated_continuous": 0.172614,
+        "late_fusion": 0.146922
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w03",
+      "session_id": "synthetic-s10",
+      "category": "Overlap",
+      "time_s": 16.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.120957,
+        "late_audio": 0.12855,
+        "late_sensor": 0.19502,
+        "continuous": 0.078478,
+        "tokenized": 0.073124,
+        "uncalibrated_continuous": 0.130583,
+        "late_fusion": 0.12855
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w03",
+      "session_id": "synthetic-s10",
+      "category": "Overlap",
+      "time_s": 17.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.022344,
+        "late_audio": 0.010083,
+        "late_sensor": 0.051737,
+        "continuous": 0.010542,
+        "tokenized": 0.023651,
+        "uncalibrated_continuous": 0.026455,
+        "late_fusion": 0.010083
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w03",
+      "session_id": "synthetic-s10",
+      "category": "Overlap",
+      "time_s": 18.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.024281,
+        "late_audio": 0.010885,
+        "late_sensor": 0.050271,
+        "continuous": 0.010951,
+        "tokenized": 0.023651,
+        "uncalibrated_continuous": 0.010666,
+        "late_fusion": 0.010885
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w03",
+      "session_id": "synthetic-s10",
+      "category": "Overlap",
+      "time_s": 19.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.01805,
+        "late_audio": 0.010598,
+        "late_sensor": 0.049626,
+        "continuous": 0.01027,
+        "tokenized": 0.023651,
+        "uncalibrated_continuous": 0.008771,
+        "late_fusion": 0.010598
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w04",
+      "session_id": "synthetic-s10",
+      "category": "Gas loss",
+      "time_s": 0.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.021664,
+        "late_audio": 0.008109,
+        "late_sensor": 0.045755,
+        "continuous": 0.008879,
+        "tokenized": 0.021864,
+        "uncalibrated_continuous": 0.008481,
+        "late_fusion": 0.008109
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w04",
+      "session_id": "synthetic-s10",
+      "category": "Gas loss",
+      "time_s": 1.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.023893,
+        "late_audio": 0.009033,
+        "late_sensor": 0.04599,
+        "continuous": 0.011066,
+        "tokenized": 0.021864,
+        "uncalibrated_continuous": 0.009511,
+        "late_fusion": 0.009033
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w04",
+      "session_id": "synthetic-s10",
+      "category": "Gas loss",
+      "time_s": 2.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.020919,
+        "late_audio": 0.008467,
+        "late_sensor": 0.045253,
+        "continuous": 0.009421,
+        "tokenized": 0.021864,
+        "uncalibrated_continuous": 0.009785,
+        "late_fusion": 0.008467
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w04",
+      "session_id": "synthetic-s10",
+      "category": "Gas loss",
+      "time_s": 3.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.136542,
+        "late_audio": 0.13142,
+        "late_sensor": 0.187018,
+        "continuous": 0.081706,
+        "tokenized": 0.02985,
+        "uncalibrated_continuous": 0.124352,
+        "late_fusion": 0.13142
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w04",
+      "session_id": "synthetic-s10",
+      "category": "Gas loss",
+      "time_s": 4.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.199909,
+        "late_audio": 0.11842,
+        "late_sensor": 0.177681,
+        "continuous": 0.106175,
+        "tokenized": 0.196842,
+        "uncalibrated_continuous": 0.100052,
+        "late_fusion": 0.11842
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w04",
+      "session_id": "synthetic-s10",
+      "category": "Gas loss",
+      "time_s": 5.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.150976,
+        "late_audio": 0.126912,
+        "late_sensor": 0.177859,
+        "continuous": 0.090539,
+        "tokenized": 0.08197,
+        "uncalibrated_continuous": 0.098176,
+        "late_fusion": 0.126912
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w04",
+      "session_id": "synthetic-s10",
+      "category": "Gas loss",
+      "time_s": 6.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.127107,
+        "late_audio": 0.131229,
+        "late_sensor": 0.179921,
+        "continuous": 0.074884,
+        "tokenized": 0.02985,
+        "uncalibrated_continuous": 0.113075,
+        "late_fusion": 0.131229
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w04",
+      "session_id": "synthetic-s10",
+      "category": "Gas loss",
+      "time_s": 7.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.165836,
+        "late_audio": 0.112387,
+        "late_sensor": 0.189396,
+        "continuous": 0.083894,
+        "tokenized": 0.08197,
+        "uncalibrated_continuous": 0.096512,
+        "late_fusion": 0.112387
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w04",
+      "session_id": "synthetic-s10",
+      "category": "Gas loss",
+      "time_s": 8.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.173321,
+        "late_audio": 0.130311,
+        "late_sensor": 0.18051,
+        "continuous": 0.101438,
+        "tokenized": 0.032199,
+        "uncalibrated_continuous": 0.11914,
+        "late_fusion": 0.130311
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w04",
+      "session_id": "synthetic-s10",
+      "category": "Gas loss",
+      "time_s": 9.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.17299,
+        "late_audio": 0.12334,
+        "late_sensor": 0.186473,
+        "continuous": 0.091835,
+        "tokenized": 0.033651,
+        "uncalibrated_continuous": 0.105696,
+        "late_fusion": 0.12334
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w04",
+      "session_id": "synthetic-s10",
+      "category": "Gas loss",
+      "time_s": 10.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.171382,
+        "late_audio": 0.123901,
+        "late_sensor": 0.184299,
+        "continuous": 0.090939,
+        "tokenized": 0.033651,
+        "uncalibrated_continuous": 0.107514,
+        "late_fusion": 0.123901
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w04",
+      "session_id": "synthetic-s10",
+      "category": "Gas loss",
+      "time_s": 11.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.175933,
+        "late_audio": 0.124801,
+        "late_sensor": 0.17318,
+        "continuous": 0.092829,
+        "tokenized": 0.033651,
+        "uncalibrated_continuous": 0.114967,
+        "late_fusion": 0.124801
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w04",
+      "session_id": "synthetic-s10",
+      "category": "Gas loss",
+      "time_s": 12.5,
+      "label": 1,
+      "scores": {
+        "late_video": 0.179007,
+        "late_audio": 0.140541,
+        "late_sensor": 0.194834,
+        "continuous": 0.171162,
+        "tokenized": 0.123949,
+        "uncalibrated_continuous": 0.262313,
+        "late_fusion": 0.140541
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w04",
+      "session_id": "synthetic-s10",
+      "category": "Gas loss",
+      "time_s": 13.5,
+      "label": 1,
+      "scores": {
+        "late_video": 0.130932,
+        "late_audio": 0.266786,
+        "late_sensor": 0.245512,
+        "continuous": 0.635677,
+        "tokenized": 0.45548,
+        "uncalibrated_continuous": 0.716644,
+        "late_fusion": 0.266786
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w04",
+      "session_id": "synthetic-s10",
+      "category": "Gas loss",
+      "time_s": 14.5,
+      "label": 1,
+      "scores": {
+        "late_video": 0.226094,
+        "late_audio": 0.226787,
+        "late_sensor": 0.237864,
+        "continuous": 0.602919,
+        "tokenized": 0.722112,
+        "uncalibrated_continuous": 0.377994,
+        "late_fusion": 0.226787
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w04",
+      "session_id": "synthetic-s10",
+      "category": "Gas loss",
+      "time_s": 15.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.16539,
+        "late_audio": 0.109137,
+        "late_sensor": 0.177752,
+        "continuous": 0.07927,
+        "tokenized": 0.08197,
+        "uncalibrated_continuous": 0.101286,
+        "late_fusion": 0.109137
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w04",
+      "session_id": "synthetic-s10",
+      "category": "Gas loss",
+      "time_s": 16.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.114583,
+        "late_audio": 0.120968,
+        "late_sensor": 0.16838,
+        "continuous": 0.06898,
+        "tokenized": 0.073124,
+        "uncalibrated_continuous": 0.017623,
+        "late_fusion": 0.120968
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w04",
+      "session_id": "synthetic-s10",
+      "category": "Gas loss",
+      "time_s": 17.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.018771,
+        "late_audio": 0.009345,
+        "late_sensor": 0.048653,
+        "continuous": 0.009674,
+        "tokenized": 0.023651,
+        "uncalibrated_continuous": 0.00894,
+        "late_fusion": 0.009345
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w04",
+      "session_id": "synthetic-s10",
+      "category": "Gas loss",
+      "time_s": 18.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.018466,
+        "late_audio": 0.00971,
+        "late_sensor": 0.04516,
+        "continuous": 0.00999,
+        "tokenized": 0.021864,
+        "uncalibrated_continuous": 0.00907,
+        "late_fusion": 0.00971
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w04",
+      "session_id": "synthetic-s10",
+      "category": "Gas loss",
+      "time_s": 19.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.022727,
+        "late_audio": 0.007144,
+        "late_sensor": 0.042028,
+        "continuous": 0.008739,
+        "tokenized": 0.021864,
+        "uncalibrated_continuous": 0.010756,
+        "late_fusion": 0.007144
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w05",
+      "session_id": "synthetic-s10",
+      "category": "Spatter",
+      "time_s": 0.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.014419,
+        "late_audio": 0.017507,
+        "late_sensor": 0.05928,
+        "continuous": 0.014268,
+        "tokenized": 0.01755,
+        "uncalibrated_continuous": 0.012378,
+        "late_fusion": 0.017507
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w05",
+      "session_id": "synthetic-s10",
+      "category": "Spatter",
+      "time_s": 1.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.015181,
+        "late_audio": 0.019321,
+        "late_sensor": 0.055739,
+        "continuous": 0.014481,
+        "tokenized": 0.01755,
+        "uncalibrated_continuous": 0.011904,
+        "late_fusion": 0.019321
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w05",
+      "session_id": "synthetic-s10",
+      "category": "Spatter",
+      "time_s": 2.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.016257,
+        "late_audio": 0.020624,
+        "late_sensor": 0.055498,
+        "continuous": 0.016402,
+        "tokenized": 0.01755,
+        "uncalibrated_continuous": 0.038541,
+        "late_fusion": 0.020624
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w05",
+      "session_id": "synthetic-s10",
+      "category": "Spatter",
+      "time_s": 3.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.115975,
+        "late_audio": 0.219299,
+        "late_sensor": 0.208599,
+        "continuous": 0.161555,
+        "tokenized": 0.245982,
+        "uncalibrated_continuous": 0.077544,
+        "late_fusion": 0.219299
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w05",
+      "session_id": "synthetic-s10",
+      "category": "Spatter",
+      "time_s": 4.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.107472,
+        "late_audio": 0.240433,
+        "late_sensor": 0.225033,
+        "continuous": 0.182808,
+        "tokenized": 0.245982,
+        "uncalibrated_continuous": 0.194459,
+        "late_fusion": 0.240433
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w05",
+      "session_id": "synthetic-s10",
+      "category": "Spatter",
+      "time_s": 5.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.10374,
+        "late_audio": 0.220745,
+        "late_sensor": 0.20918,
+        "continuous": 0.146573,
+        "tokenized": 0.245982,
+        "uncalibrated_continuous": 0.164402,
+        "late_fusion": 0.220745
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w05",
+      "session_id": "synthetic-s10",
+      "category": "Spatter",
+      "time_s": 6.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.115995,
+        "late_audio": 0.225218,
+        "late_sensor": 0.242717,
+        "continuous": 0.201921,
+        "tokenized": 0.45548,
+        "uncalibrated_continuous": 0.222809,
+        "late_fusion": 0.225218
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w05",
+      "session_id": "synthetic-s10",
+      "category": "Spatter",
+      "time_s": 7.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.119561,
+        "late_audio": 0.253741,
+        "late_sensor": 0.231316,
+        "continuous": 0.25056,
+        "tokenized": 0.45548,
+        "uncalibrated_continuous": 0.291554,
+        "late_fusion": 0.253741
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w05",
+      "session_id": "synthetic-s10",
+      "category": "Spatter",
+      "time_s": 8.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.107817,
+        "late_audio": 0.264802,
+        "late_sensor": 0.208588,
+        "continuous": 0.215758,
+        "tokenized": 0.23762,
+        "uncalibrated_continuous": 0.237085,
+        "late_fusion": 0.264802
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w05",
+      "session_id": "synthetic-s10",
+      "category": "Spatter",
+      "time_s": 9.5,
+      "label": 1,
+      "scores": {
+        "late_video": 0.109066,
+        "late_audio": 0.287102,
+        "late_sensor": 0.227272,
+        "continuous": 0.260045,
+        "tokenized": 0.23762,
+        "uncalibrated_continuous": 0.594116,
+        "late_fusion": 0.287102
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w05",
+      "session_id": "synthetic-s10",
+      "category": "Spatter",
+      "time_s": 10.5,
+      "label": 1,
+      "scores": {
+        "late_video": 0.134104,
+        "late_audio": 0.663009,
+        "late_sensor": 0.233343,
+        "continuous": 0.816033,
+        "tokenized": 0.245982,
+        "uncalibrated_continuous": 0.786802,
+        "late_fusion": 0.663009
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w05",
+      "session_id": "synthetic-s10",
+      "category": "Spatter",
+      "time_s": 11.5,
+      "label": 1,
+      "scores": {
+        "late_video": 0.164673,
+        "late_audio": 0.588185,
+        "late_sensor": 0.232779,
+        "continuous": 0.80798,
+        "tokenized": 0.486312,
+        "uncalibrated_continuous": 0.428092,
+        "late_fusion": 0.588185
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w05",
+      "session_id": "synthetic-s10",
+      "category": "Spatter",
+      "time_s": 12.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.135629,
+        "late_audio": 0.226316,
+        "late_sensor": 0.212226,
+        "continuous": 0.201166,
+        "tokenized": 0.245982,
+        "uncalibrated_continuous": 0.263755,
+        "late_fusion": 0.226316
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w05",
+      "session_id": "synthetic-s10",
+      "category": "Spatter",
+      "time_s": 13.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.104732,
+        "late_audio": 0.248973,
+        "late_sensor": 0.242169,
+        "continuous": 0.209588,
+        "tokenized": 0.23762,
+        "uncalibrated_continuous": 0.27236,
+        "late_fusion": 0.248973
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w05",
+      "session_id": "synthetic-s10",
+      "category": "Spatter",
+      "time_s": 14.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.106047,
+        "late_audio": 0.24526,
+        "late_sensor": 0.21271,
+        "continuous": 0.182132,
+        "tokenized": 0.245982,
+        "uncalibrated_continuous": 0.198694,
+        "late_fusion": 0.24526
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w05",
+      "session_id": "synthetic-s10",
+      "category": "Spatter",
+      "time_s": 15.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.116602,
+        "late_audio": 0.243478,
+        "late_sensor": 0.220995,
+        "continuous": 0.218056,
+        "tokenized": 0.45548,
+        "uncalibrated_continuous": 0.216414,
+        "late_fusion": 0.243478
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w05",
+      "session_id": "synthetic-s10",
+      "category": "Spatter",
+      "time_s": 16.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.060476,
+        "late_audio": 0.248486,
+        "late_sensor": 0.187731,
+        "continuous": 0.122468,
+        "tokenized": 0.45548,
+        "uncalibrated_continuous": 0.031023,
+        "late_fusion": 0.248486
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w05",
+      "session_id": "synthetic-s10",
+      "category": "Spatter",
+      "time_s": 17.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.015183,
+        "late_audio": 0.018276,
+        "late_sensor": 0.060639,
+        "continuous": 0.015258,
+        "tokenized": 0.01755,
+        "uncalibrated_continuous": 0.01643,
+        "late_fusion": 0.018276
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w05",
+      "session_id": "synthetic-s10",
+      "category": "Spatter",
+      "time_s": 18.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.01594,
+        "late_audio": 0.018258,
+        "late_sensor": 0.05757,
+        "continuous": 0.014827,
+        "tokenized": 0.01755,
+        "uncalibrated_continuous": 0.013183,
+        "late_fusion": 0.018258
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w05",
+      "session_id": "synthetic-s10",
+      "category": "Spatter",
+      "time_s": 19.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.009568,
+        "late_audio": 0.018649,
+        "late_sensor": 0.060108,
+        "continuous": 0.014409,
+        "tokenized": 0.01755,
+        "uncalibrated_continuous": 0.013455,
+        "late_fusion": 0.018649
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w06",
+      "session_id": "synthetic-s10",
+      "category": "Good",
+      "time_s": 0.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.020011,
+        "late_audio": 0.006784,
+        "late_sensor": 0.022178,
+        "continuous": 0.009483,
+        "tokenized": 0.021864,
+        "uncalibrated_continuous": 0.007866,
+        "late_fusion": 0.006784
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w06",
+      "session_id": "synthetic-s10",
+      "category": "Good",
+      "time_s": 1.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.021526,
+        "late_audio": 0.006719,
+        "late_sensor": 0.023779,
+        "continuous": 0.008393,
+        "tokenized": 0.021864,
+        "uncalibrated_continuous": 0.008159,
+        "late_fusion": 0.006719
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w06",
+      "session_id": "synthetic-s10",
+      "category": "Good",
+      "time_s": 2.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.022922,
+        "late_audio": 0.008722,
+        "late_sensor": 0.023533,
+        "continuous": 0.010724,
+        "tokenized": 0.021864,
+        "uncalibrated_continuous": 0.040755,
+        "late_fusion": 0.008722
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w06",
+      "session_id": "synthetic-s10",
+      "category": "Good",
+      "time_s": 3.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.203801,
+        "late_audio": 0.098337,
+        "late_sensor": 0.10107,
+        "continuous": 0.054993,
+        "tokenized": 0.048007,
+        "uncalibrated_continuous": 0.050574,
+        "late_fusion": 0.098337
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w06",
+      "session_id": "synthetic-s10",
+      "category": "Good",
+      "time_s": 4.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.14299,
+        "late_audio": 0.121027,
+        "late_sensor": 0.094916,
+        "continuous": 0.055094,
+        "tokenized": 0.01725,
+        "uncalibrated_continuous": 0.061215,
+        "late_fusion": 0.121027
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w06",
+      "session_id": "synthetic-s10",
+      "category": "Good",
+      "time_s": 5.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.171642,
+        "late_audio": 0.103476,
+        "late_sensor": 0.099273,
+        "continuous": 0.051376,
+        "tokenized": 0.01804,
+        "uncalibrated_continuous": 0.068895,
+        "late_fusion": 0.103476
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w06",
+      "session_id": "synthetic-s10",
+      "category": "Good",
+      "time_s": 6.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.159399,
+        "late_audio": 0.121968,
+        "late_sensor": 0.092761,
+        "continuous": 0.05312,
+        "tokenized": 0.01804,
+        "uncalibrated_continuous": 0.05849,
+        "late_fusion": 0.121968
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w06",
+      "session_id": "synthetic-s10",
+      "category": "Good",
+      "time_s": 7.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.174144,
+        "late_audio": 0.115642,
+        "late_sensor": 0.103887,
+        "continuous": 0.063568,
+        "tokenized": 0.01725,
+        "uncalibrated_continuous": 0.046726,
+        "late_fusion": 0.115642
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w06",
+      "session_id": "synthetic-s10",
+      "category": "Good",
+      "time_s": 8.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.152575,
+        "late_audio": 0.104302,
+        "late_sensor": 0.098984,
+        "continuous": 0.046872,
+        "tokenized": 0.01804,
+        "uncalibrated_continuous": 0.070545,
+        "late_fusion": 0.104302
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w06",
+      "session_id": "synthetic-s10",
+      "category": "Good",
+      "time_s": 9.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.170128,
+        "late_audio": 0.113829,
+        "late_sensor": 0.09868,
+        "continuous": 0.055553,
+        "tokenized": 0.01804,
+        "uncalibrated_continuous": 0.075804,
+        "late_fusion": 0.113829
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w06",
+      "session_id": "synthetic-s10",
+      "category": "Good",
+      "time_s": 10.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.232443,
+        "late_audio": 0.111206,
+        "late_sensor": 0.094972,
+        "continuous": 0.080518,
+        "tokenized": 0.114498,
+        "uncalibrated_continuous": 0.065461,
+        "late_fusion": 0.111206
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w06",
+      "session_id": "synthetic-s10",
+      "category": "Good",
+      "time_s": 11.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.183501,
+        "late_audio": 0.10607,
+        "late_sensor": 0.09796,
+        "continuous": 0.05345,
+        "tokenized": 0.048007,
+        "uncalibrated_continuous": 0.066045,
+        "late_fusion": 0.10607
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w06",
+      "session_id": "synthetic-s10",
+      "category": "Good",
+      "time_s": 12.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.191583,
+        "late_audio": 0.104511,
+        "late_sensor": 0.099604,
+        "continuous": 0.061557,
+        "tokenized": 0.114498,
+        "uncalibrated_continuous": 0.070806,
+        "late_fusion": 0.104511
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w06",
+      "session_id": "synthetic-s10",
+      "category": "Good",
+      "time_s": 13.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.182669,
+        "late_audio": 0.102348,
+        "late_sensor": 0.099632,
+        "continuous": 0.060034,
+        "tokenized": 0.114498,
+        "uncalibrated_continuous": 0.05184,
+        "late_fusion": 0.102348
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w06",
+      "session_id": "synthetic-s10",
+      "category": "Good",
+      "time_s": 14.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.157781,
+        "late_audio": 0.126339,
+        "late_sensor": 0.10958,
+        "continuous": 0.067518,
+        "tokenized": 0.01804,
+        "uncalibrated_continuous": 0.093665,
+        "late_fusion": 0.126339
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w06",
+      "session_id": "synthetic-s10",
+      "category": "Good",
+      "time_s": 15.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.189347,
+        "late_audio": 0.115697,
+        "late_sensor": 0.096212,
+        "continuous": 0.064962,
+        "tokenized": 0.048007,
+        "uncalibrated_continuous": 0.071645,
+        "late_fusion": 0.115697
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w06",
+      "session_id": "synthetic-s10",
+      "category": "Good",
+      "time_s": 16.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.123619,
+        "late_audio": 0.128559,
+        "late_sensor": 0.080478,
+        "continuous": 0.061421,
+        "tokenized": 0.039959,
+        "uncalibrated_continuous": 0.003393,
+        "late_fusion": 0.128559
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w06",
+      "session_id": "synthetic-s10",
+      "category": "Good",
+      "time_s": 17.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.023707,
+        "late_audio": 0.006786,
+        "late_sensor": 0.022605,
+        "continuous": 0.009152,
+        "tokenized": 0.021864,
+        "uncalibrated_continuous": 0.008601,
+        "late_fusion": 0.006786
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w06",
+      "session_id": "synthetic-s10",
+      "category": "Good",
+      "time_s": 18.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.019324,
+        "late_audio": 0.008178,
+        "late_sensor": 0.02409,
+        "continuous": 0.009013,
+        "tokenized": 0.021864,
+        "uncalibrated_continuous": 0.007955,
+        "late_fusion": 0.008178
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w06",
+      "session_id": "synthetic-s10",
+      "category": "Good",
+      "time_s": 19.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.024719,
+        "late_audio": 0.009148,
+        "late_sensor": 0.022042,
+        "continuous": 0.009326,
+        "tokenized": 0.047733,
+        "uncalibrated_continuous": 0.008489,
+        "late_fusion": 0.009148
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w07",
+      "session_id": "synthetic-s10",
+      "category": "Overlap",
+      "time_s": 0.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.019893,
+        "late_audio": 0.009975,
+        "late_sensor": 0.047204,
+        "continuous": 0.009606,
+        "tokenized": 0.023651,
+        "uncalibrated_continuous": 0.007979,
+        "late_fusion": 0.009975
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w07",
+      "session_id": "synthetic-s10",
+      "category": "Overlap",
+      "time_s": 1.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.017878,
+        "late_audio": 0.008821,
+        "late_sensor": 0.048278,
+        "continuous": 0.009125,
+        "tokenized": 0.023651,
+        "uncalibrated_continuous": 0.008873,
+        "late_fusion": 0.008821
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w07",
+      "session_id": "synthetic-s10",
+      "category": "Overlap",
+      "time_s": 2.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.016083,
+        "late_audio": 0.008133,
+        "late_sensor": 0.046608,
+        "continuous": 0.008457,
+        "tokenized": 0.023651,
+        "uncalibrated_continuous": 0.008421,
+        "late_fusion": 0.008133
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w07",
+      "session_id": "synthetic-s10",
+      "category": "Overlap",
+      "time_s": 3.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.142532,
+        "late_audio": 0.124413,
+        "late_sensor": 0.171168,
+        "continuous": 0.076013,
+        "tokenized": 0.033651,
+        "uncalibrated_continuous": 0.042058,
+        "late_fusion": 0.124413
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w07",
+      "session_id": "synthetic-s10",
+      "category": "Overlap",
+      "time_s": 4.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.140708,
+        "late_audio": 0.143607,
+        "late_sensor": 0.188843,
+        "continuous": 0.095257,
+        "tokenized": 0.046488,
+        "uncalibrated_continuous": 0.100036,
+        "late_fusion": 0.143607
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w07",
+      "session_id": "synthetic-s10",
+      "category": "Overlap",
+      "time_s": 5.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.144363,
+        "late_audio": 0.124722,
+        "late_sensor": 0.169429,
+        "continuous": 0.080569,
+        "tokenized": 0.032199,
+        "uncalibrated_continuous": 0.094687,
+        "late_fusion": 0.124722
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w07",
+      "session_id": "synthetic-s10",
+      "category": "Overlap",
+      "time_s": 6.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.194688,
+        "late_audio": 0.128859,
+        "late_sensor": 0.186435,
+        "continuous": 0.113149,
+        "tokenized": 0.087244,
+        "uncalibrated_continuous": 0.117334,
+        "late_fusion": 0.128859
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w07",
+      "session_id": "synthetic-s10",
+      "category": "Overlap",
+      "time_s": 7.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.17684,
+        "late_audio": 0.134796,
+        "late_sensor": 0.178625,
+        "continuous": 0.11102,
+        "tokenized": 0.032199,
+        "uncalibrated_continuous": 0.142966,
+        "late_fusion": 0.134796
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w07",
+      "session_id": "synthetic-s10",
+      "category": "Overlap",
+      "time_s": 8.5,
+      "label": 1,
+      "scores": {
+        "late_video": 0.314327,
+        "late_audio": 0.292647,
+        "late_sensor": 0.252629,
+        "continuous": 0.614673,
+        "tokenized": 0.503339,
+        "uncalibrated_continuous": 0.509938,
+        "late_fusion": 0.292647
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w07",
+      "session_id": "synthetic-s10",
+      "category": "Overlap",
+      "time_s": 9.5,
+      "label": 1,
+      "scores": {
+        "late_video": 0.378043,
+        "late_audio": 0.307082,
+        "late_sensor": 0.217914,
+        "continuous": 0.67964,
+        "tokenized": 0.491936,
+        "uncalibrated_continuous": 0.635307,
+        "late_fusion": 0.307082
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w07",
+      "session_id": "synthetic-s10",
+      "category": "Overlap",
+      "time_s": 10.5,
+      "label": 1,
+      "scores": {
+        "late_video": 0.154074,
+        "late_audio": 0.157263,
+        "late_sensor": 0.169938,
+        "continuous": 0.117361,
+        "tokenized": 0.050079,
+        "uncalibrated_continuous": 0.249878,
+        "late_fusion": 0.157263
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w07",
+      "session_id": "synthetic-s10",
+      "category": "Overlap",
+      "time_s": 11.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.139825,
+        "late_audio": 0.127437,
+        "late_sensor": 0.179538,
+        "continuous": 0.078995,
+        "tokenized": 0.02985,
+        "uncalibrated_continuous": 0.100262,
+        "late_fusion": 0.127437
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w07",
+      "session_id": "synthetic-s10",
+      "category": "Overlap",
+      "time_s": 12.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.165892,
+        "late_audio": 0.124146,
+        "late_sensor": 0.191346,
+        "continuous": 0.103025,
+        "tokenized": 0.08197,
+        "uncalibrated_continuous": 0.098603,
+        "late_fusion": 0.124146
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w07",
+      "session_id": "synthetic-s10",
+      "category": "Overlap",
+      "time_s": 13.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.155009,
+        "late_audio": 0.124964,
+        "late_sensor": 0.177068,
+        "continuous": 0.083857,
+        "tokenized": 0.033651,
+        "uncalibrated_continuous": 0.100278,
+        "late_fusion": 0.124964
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w07",
+      "session_id": "synthetic-s10",
+      "category": "Overlap",
+      "time_s": 14.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.157716,
+        "late_audio": 0.13446,
+        "late_sensor": 0.179144,
+        "continuous": 0.101302,
+        "tokenized": 0.032199,
+        "uncalibrated_continuous": 0.119215,
+        "late_fusion": 0.13446
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w07",
+      "session_id": "synthetic-s10",
+      "category": "Overlap",
+      "time_s": 15.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.143723,
+        "late_audio": 0.132992,
+        "late_sensor": 0.192802,
+        "continuous": 0.095151,
+        "tokenized": 0.032199,
+        "uncalibrated_continuous": 0.127937,
+        "late_fusion": 0.132992
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w07",
+      "session_id": "synthetic-s10",
+      "category": "Overlap",
+      "time_s": 16.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.086614,
+        "late_audio": 0.131818,
+        "late_sensor": 0.165656,
+        "continuous": 0.059965,
+        "tokenized": 0.058776,
+        "uncalibrated_continuous": 0.079116,
+        "late_fusion": 0.131818
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w07",
+      "session_id": "synthetic-s10",
+      "category": "Overlap",
+      "time_s": 17.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.022119,
+        "late_audio": 0.009937,
+        "late_sensor": 0.046506,
+        "continuous": 0.010691,
+        "tokenized": 0.023651,
+        "uncalibrated_continuous": 0.006691,
+        "late_fusion": 0.009937
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w07",
+      "session_id": "synthetic-s10",
+      "category": "Overlap",
+      "time_s": 18.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.024028,
+        "late_audio": 0.009091,
+        "late_sensor": 0.047978,
+        "continuous": 0.009314,
+        "tokenized": 0.023651,
+        "uncalibrated_continuous": 0.008464,
+        "late_fusion": 0.009091
+      }
+    },
+    {
+      "episode_id": "synthetic-s10-w07",
+      "session_id": "synthetic-s10",
+      "category": "Overlap",
+      "time_s": 19.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.021189,
+        "late_audio": 0.008793,
+        "late_sensor": 0.046329,
+        "continuous": 0.009316,
+        "tokenized": 0.023651,
+        "uncalibrated_continuous": 0.008549,
+        "late_fusion": 0.008793
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w00",
+      "session_id": "synthetic-s11",
+      "category": "Spatter",
+      "time_s": 0.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.019703,
+        "late_audio": 0.006885,
+        "late_sensor": 0.040906,
+        "continuous": 0.007925,
+        "tokenized": 0.021864,
+        "uncalibrated_continuous": 0.006483,
+        "late_fusion": 0.006885
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w00",
+      "session_id": "synthetic-s11",
+      "category": "Spatter",
+      "time_s": 1.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.022898,
+        "late_audio": 0.006215,
+        "late_sensor": 0.041607,
+        "continuous": 0.007263,
+        "tokenized": 0.021864,
+        "uncalibrated_continuous": 0.007562,
+        "late_fusion": 0.006215
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w00",
+      "session_id": "synthetic-s11",
+      "category": "Spatter",
+      "time_s": 2.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.022958,
+        "late_audio": 0.006338,
+        "late_sensor": 0.053226,
+        "continuous": 0.006327,
+        "tokenized": 0.051523,
+        "uncalibrated_continuous": 0.040616,
+        "late_fusion": 0.006338
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w00",
+      "session_id": "synthetic-s11",
+      "category": "Spatter",
+      "time_s": 3.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.152927,
+        "late_audio": 0.093958,
+        "late_sensor": 0.167588,
+        "continuous": 0.055537,
+        "tokenized": 0.08197,
+        "uncalibrated_continuous": 0.061854,
+        "late_fusion": 0.093958
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w00",
+      "session_id": "synthetic-s11",
+      "category": "Spatter",
+      "time_s": 4.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.139724,
+        "late_audio": 0.098882,
+        "late_sensor": 0.166039,
+        "continuous": 0.055224,
+        "tokenized": 0.073124,
+        "uncalibrated_continuous": 0.072468,
+        "late_fusion": 0.098882
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w00",
+      "session_id": "synthetic-s11",
+      "category": "Spatter",
+      "time_s": 5.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.125765,
+        "late_audio": 0.114097,
+        "late_sensor": 0.175293,
+        "continuous": 0.065776,
+        "tokenized": 0.073124,
+        "uncalibrated_continuous": 0.074849,
+        "late_fusion": 0.114097
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w00",
+      "session_id": "synthetic-s11",
+      "category": "Spatter",
+      "time_s": 6.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.158155,
+        "late_audio": 0.104105,
+        "late_sensor": 0.17591,
+        "continuous": 0.067695,
+        "tokenized": 0.032199,
+        "uncalibrated_continuous": 0.091938,
+        "late_fusion": 0.104105
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w00",
+      "session_id": "synthetic-s11",
+      "category": "Spatter",
+      "time_s": 7.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.164181,
+        "late_audio": 0.098544,
+        "late_sensor": 0.161216,
+        "continuous": 0.062758,
+        "tokenized": 0.06601,
+        "uncalibrated_continuous": 0.219153,
+        "late_fusion": 0.098544
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w00",
+      "session_id": "synthetic-s11",
+      "category": "Spatter",
+      "time_s": 8.5,
+      "label": 1,
+      "scores": {
+        "late_video": 0.225027,
+        "late_audio": 0.270786,
+        "late_sensor": 0.162863,
+        "continuous": 0.363865,
+        "tokenized": 0.433879,
+        "uncalibrated_continuous": 0.612925,
+        "late_fusion": 0.270786
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w00",
+      "session_id": "synthetic-s11",
+      "category": "Spatter",
+      "time_s": 9.5,
+      "label": 1,
+      "scores": {
+        "late_video": 0.194481,
+        "late_audio": 0.471356,
+        "late_sensor": 0.146776,
+        "continuous": 0.618348,
+        "tokenized": 0.433879,
+        "uncalibrated_continuous": 0.302896,
+        "late_fusion": 0.471356
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w00",
+      "session_id": "synthetic-s11",
+      "category": "Spatter",
+      "time_s": 10.5,
+      "label": 1,
+      "scores": {
+        "late_video": 0.186509,
+        "late_audio": 0.173422,
+        "late_sensor": 0.159935,
+        "continuous": 0.157396,
+        "tokenized": 0.102769,
+        "uncalibrated_continuous": 0.066801,
+        "late_fusion": 0.173422
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w00",
+      "session_id": "synthetic-s11",
+      "category": "Spatter",
+      "time_s": 11.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.167429,
+        "late_audio": 0.097493,
+        "late_sensor": 0.169448,
+        "continuous": 0.056529,
+        "tokenized": 0.033651,
+        "uncalibrated_continuous": 0.072917,
+        "late_fusion": 0.097493
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w00",
+      "session_id": "synthetic-s11",
+      "category": "Spatter",
+      "time_s": 12.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.179399,
+        "late_audio": 0.09719,
+        "late_sensor": 0.164605,
+        "continuous": 0.064524,
+        "tokenized": 0.032199,
+        "uncalibrated_continuous": 0.07928,
+        "late_fusion": 0.09719
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w00",
+      "session_id": "synthetic-s11",
+      "category": "Spatter",
+      "time_s": 13.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.13335,
+        "late_audio": 0.113494,
+        "late_sensor": 0.169789,
+        "continuous": 0.063804,
+        "tokenized": 0.028557,
+        "uncalibrated_continuous": 0.067799,
+        "late_fusion": 0.113494
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w00",
+      "session_id": "synthetic-s11",
+      "category": "Spatter",
+      "time_s": 14.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.162054,
+        "late_audio": 0.095459,
+        "late_sensor": 0.16075,
+        "continuous": 0.055017,
+        "tokenized": 0.026824,
+        "uncalibrated_continuous": 0.06173,
+        "late_fusion": 0.095459
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w00",
+      "session_id": "synthetic-s11",
+      "category": "Spatter",
+      "time_s": 15.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.149664,
+        "late_audio": 0.094779,
+        "late_sensor": 0.161708,
+        "continuous": 0.054047,
+        "tokenized": 0.025658,
+        "uncalibrated_continuous": 0.077679,
+        "late_fusion": 0.094779
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w00",
+      "session_id": "synthetic-s11",
+      "category": "Spatter",
+      "time_s": 16.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.178502,
+        "late_audio": 0.095474,
+        "late_sensor": 0.141786,
+        "continuous": 0.069091,
+        "tokenized": 0.044988,
+        "uncalibrated_continuous": 0.005075,
+        "late_fusion": 0.095474
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w00",
+      "session_id": "synthetic-s11",
+      "category": "Spatter",
+      "time_s": 17.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.023795,
+        "late_audio": 0.007615,
+        "late_sensor": 0.04512,
+        "continuous": 0.009864,
+        "tokenized": 0.021864,
+        "uncalibrated_continuous": 0.007277,
+        "late_fusion": 0.007615
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w00",
+      "session_id": "synthetic-s11",
+      "category": "Spatter",
+      "time_s": 18.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.019607,
+        "late_audio": 0.006209,
+        "late_sensor": 0.040111,
+        "continuous": 0.006302,
+        "tokenized": 0.047733,
+        "uncalibrated_continuous": 0.005683,
+        "late_fusion": 0.006209
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w00",
+      "session_id": "synthetic-s11",
+      "category": "Spatter",
+      "time_s": 19.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.017644,
+        "late_audio": 0.005723,
+        "late_sensor": 0.044018,
+        "continuous": 0.006921,
+        "tokenized": 0.021864,
+        "uncalibrated_continuous": 0.006449,
+        "late_fusion": 0.005723
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w01",
+      "session_id": "synthetic-s11",
+      "category": "Good",
+      "time_s": 0.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.028273,
+        "late_audio": 0.006286,
+        "late_sensor": 0.039886,
+        "continuous": 0.007565,
+        "tokenized": 0.021864,
+        "uncalibrated_continuous": 0.006683,
+        "late_fusion": 0.006286
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w01",
+      "session_id": "synthetic-s11",
+      "category": "Good",
+      "time_s": 1.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.024665,
+        "late_audio": 0.006025,
+        "late_sensor": 0.042415,
+        "continuous": 0.00685,
+        "tokenized": 0.047733,
+        "uncalibrated_continuous": 0.006519,
+        "late_fusion": 0.006025
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w01",
+      "session_id": "synthetic-s11",
+      "category": "Good",
+      "time_s": 2.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.032989,
+        "late_audio": 0.007907,
+        "late_sensor": 0.042338,
+        "continuous": 0.008847,
+        "tokenized": 0.049506,
+        "uncalibrated_continuous": 0.004488,
+        "late_fusion": 0.007907
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w01",
+      "session_id": "synthetic-s11",
+      "category": "Good",
+      "time_s": 3.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.197546,
+        "late_audio": 0.09371,
+        "late_sensor": 0.173517,
+        "continuous": 0.062791,
+        "tokenized": 0.087244,
+        "uncalibrated_continuous": 0.033221,
+        "late_fusion": 0.09371
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w01",
+      "session_id": "synthetic-s11",
+      "category": "Good",
+      "time_s": 4.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.195673,
+        "late_audio": 0.116862,
+        "late_sensor": 0.172338,
+        "continuous": 0.093178,
+        "tokenized": 0.087244,
+        "uncalibrated_continuous": 0.087563,
+        "late_fusion": 0.116862
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w01",
+      "session_id": "synthetic-s11",
+      "category": "Good",
+      "time_s": 5.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.239748,
+        "late_audio": 0.083392,
+        "late_sensor": 0.157885,
+        "continuous": 0.062479,
+        "tokenized": 0.070336,
+        "uncalibrated_continuous": 0.082935,
+        "late_fusion": 0.083392
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w01",
+      "session_id": "synthetic-s11",
+      "category": "Good",
+      "time_s": 6.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.198167,
+        "late_audio": 0.10013,
+        "late_sensor": 0.164334,
+        "continuous": 0.072796,
+        "tokenized": 0.083679,
+        "uncalibrated_continuous": 0.077444,
+        "late_fusion": 0.10013
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w01",
+      "session_id": "synthetic-s11",
+      "category": "Good",
+      "time_s": 7.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.172355,
+        "late_audio": 0.105657,
+        "late_sensor": 0.166715,
+        "continuous": 0.074203,
+        "tokenized": 0.08197,
+        "uncalibrated_continuous": 0.098843,
+        "late_fusion": 0.105657
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w01",
+      "session_id": "synthetic-s11",
+      "category": "Good",
+      "time_s": 8.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.213901,
+        "late_audio": 0.107205,
+        "late_sensor": 0.164468,
+        "continuous": 0.08379,
+        "tokenized": 0.087244,
+        "uncalibrated_continuous": 0.09657,
+        "late_fusion": 0.107205
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w01",
+      "session_id": "synthetic-s11",
+      "category": "Good",
+      "time_s": 9.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.223486,
+        "late_audio": 0.096373,
+        "late_sensor": 0.17193,
+        "continuous": 0.080003,
+        "tokenized": 0.083679,
+        "uncalibrated_continuous": 0.103521,
+        "late_fusion": 0.096373
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w01",
+      "session_id": "synthetic-s11",
+      "category": "Good",
+      "time_s": 10.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.200388,
+        "late_audio": 0.108041,
+        "late_sensor": 0.180967,
+        "continuous": 0.093439,
+        "tokenized": 0.196842,
+        "uncalibrated_continuous": 0.108431,
+        "late_fusion": 0.108041
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w01",
+      "session_id": "synthetic-s11",
+      "category": "Good",
+      "time_s": 11.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.182125,
+        "late_audio": 0.104642,
+        "late_sensor": 0.169253,
+        "continuous": 0.072739,
+        "tokenized": 0.087244,
+        "uncalibrated_continuous": 0.089707,
+        "late_fusion": 0.104642
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w01",
+      "session_id": "synthetic-s11",
+      "category": "Good",
+      "time_s": 12.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.177412,
+        "late_audio": 0.093766,
+        "late_sensor": 0.180354,
+        "continuous": 0.068859,
+        "tokenized": 0.08197,
+        "uncalibrated_continuous": 0.087869,
+        "late_fusion": 0.093766
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w01",
+      "session_id": "synthetic-s11",
+      "category": "Good",
+      "time_s": 13.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.160833,
+        "late_audio": 0.100923,
+        "late_sensor": 0.178931,
+        "continuous": 0.065146,
+        "tokenized": 0.032199,
+        "uncalibrated_continuous": 0.086267,
+        "late_fusion": 0.100923
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w01",
+      "session_id": "synthetic-s11",
+      "category": "Good",
+      "time_s": 14.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.213591,
+        "late_audio": 0.112632,
+        "late_sensor": 0.16744,
+        "continuous": 0.094411,
+        "tokenized": 0.087244,
+        "uncalibrated_continuous": 0.092658,
+        "late_fusion": 0.112632
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w01",
+      "session_id": "synthetic-s11",
+      "category": "Good",
+      "time_s": 15.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.192046,
+        "late_audio": 0.101566,
+        "late_sensor": 0.180847,
+        "continuous": 0.075667,
+        "tokenized": 0.087244,
+        "uncalibrated_continuous": 0.089222,
+        "late_fusion": 0.101566
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w01",
+      "session_id": "synthetic-s11",
+      "category": "Good",
+      "time_s": 16.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.176575,
+        "late_audio": 0.084342,
+        "late_sensor": 0.149266,
+        "continuous": 0.056325,
+        "tokenized": 0.06601,
+        "uncalibrated_continuous": 0.063192,
+        "late_fusion": 0.084342
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w01",
+      "session_id": "synthetic-s11",
+      "category": "Good",
+      "time_s": 17.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.022356,
+        "late_audio": 0.006383,
+        "late_sensor": 0.042979,
+        "continuous": 0.007467,
+        "tokenized": 0.021864,
+        "uncalibrated_continuous": 0.007917,
+        "late_fusion": 0.006383
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w01",
+      "session_id": "synthetic-s11",
+      "category": "Good",
+      "time_s": 18.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.026804,
+        "late_audio": 0.007248,
+        "late_sensor": 0.040552,
+        "continuous": 0.007892,
+        "tokenized": 0.047733,
+        "uncalibrated_continuous": 0.007331,
+        "late_fusion": 0.007248
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w01",
+      "session_id": "synthetic-s11",
+      "category": "Good",
+      "time_s": 19.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.032586,
+        "late_audio": 0.007116,
+        "late_sensor": 0.039918,
+        "continuous": 0.007801,
+        "tokenized": 0.049506,
+        "uncalibrated_continuous": 0.006671,
+        "late_fusion": 0.007116
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w02",
+      "session_id": "synthetic-s11",
+      "category": "Overlap",
+      "time_s": 0.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.020055,
+        "late_audio": 0.0112,
+        "late_sensor": 0.034382,
+        "continuous": 0.011234,
+        "tokenized": 0.021864,
+        "uncalibrated_continuous": 0.009787,
+        "late_fusion": 0.0112
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w02",
+      "session_id": "synthetic-s11",
+      "category": "Overlap",
+      "time_s": 1.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.02327,
+        "late_audio": 0.010227,
+        "late_sensor": 0.03531,
+        "continuous": 0.010848,
+        "tokenized": 0.021864,
+        "uncalibrated_continuous": 0.009184,
+        "late_fusion": 0.010227
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w02",
+      "session_id": "synthetic-s11",
+      "category": "Overlap",
+      "time_s": 2.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.020404,
+        "late_audio": 0.011565,
+        "late_sensor": 0.039962,
+        "continuous": 0.009107,
+        "tokenized": 0.047733,
+        "uncalibrated_continuous": 0.011526,
+        "late_fusion": 0.011565
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w02",
+      "session_id": "synthetic-s11",
+      "category": "Overlap",
+      "time_s": 3.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.145175,
+        "late_audio": 0.161887,
+        "late_sensor": 0.139677,
+        "continuous": 0.101323,
+        "tokenized": 0.041849,
+        "uncalibrated_continuous": 0.060646,
+        "late_fusion": 0.161887
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w02",
+      "session_id": "synthetic-s11",
+      "category": "Overlap",
+      "time_s": 4.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.124064,
+        "late_audio": 0.181058,
+        "late_sensor": 0.154401,
+        "continuous": 0.118138,
+        "tokenized": 0.090042,
+        "uncalibrated_continuous": 0.133401,
+        "late_fusion": 0.181058
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w02",
+      "session_id": "synthetic-s11",
+      "category": "Overlap",
+      "time_s": 5.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.131299,
+        "late_audio": 0.165085,
+        "late_sensor": 0.15085,
+        "continuous": 0.103439,
+        "tokenized": 0.035559,
+        "uncalibrated_continuous": 0.107193,
+        "late_fusion": 0.165085
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w02",
+      "session_id": "synthetic-s11",
+      "category": "Overlap",
+      "time_s": 6.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.173309,
+        "late_audio": 0.157838,
+        "late_sensor": 0.13898,
+        "continuous": 0.124066,
+        "tokenized": 0.069461,
+        "uncalibrated_continuous": 0.135639,
+        "late_fusion": 0.157838
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w02",
+      "session_id": "synthetic-s11",
+      "category": "Overlap",
+      "time_s": 7.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.156126,
+        "late_audio": 0.167396,
+        "late_sensor": 0.157131,
+        "continuous": 0.132068,
+        "tokenized": 0.100712,
+        "uncalibrated_continuous": 0.131377,
+        "late_fusion": 0.167396
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w02",
+      "session_id": "synthetic-s11",
+      "category": "Overlap",
+      "time_s": 8.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.124759,
+        "late_audio": 0.161204,
+        "late_sensor": 0.146152,
+        "continuous": 0.09411,
+        "tokenized": 0.035559,
+        "uncalibrated_continuous": 0.121992,
+        "late_fusion": 0.161204
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w02",
+      "session_id": "synthetic-s11",
+      "category": "Overlap",
+      "time_s": 9.5,
+      "label": 1,
+      "scores": {
+        "late_video": 0.209201,
+        "late_audio": 0.247839,
+        "late_sensor": 0.165943,
+        "continuous": 0.304681,
+        "tokenized": 0.491936,
+        "uncalibrated_continuous": 0.19148,
+        "late_fusion": 0.247839
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w02",
+      "session_id": "synthetic-s11",
+      "category": "Overlap",
+      "time_s": 10.5,
+      "label": 1,
+      "scores": {
+        "late_video": 0.364482,
+        "late_audio": 0.354641,
+        "late_sensor": 0.195821,
+        "continuous": 0.722544,
+        "tokenized": 0.491936,
+        "uncalibrated_continuous": 0.701629,
+        "late_fusion": 0.354641
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w02",
+      "session_id": "synthetic-s11",
+      "category": "Overlap",
+      "time_s": 11.5,
+      "label": 1,
+      "scores": {
+        "late_video": 0.201513,
+        "late_audio": 0.292129,
+        "late_sensor": 0.163146,
+        "continuous": 0.348658,
+        "tokenized": 0.503339,
+        "uncalibrated_continuous": 0.537509,
+        "late_fusion": 0.292129
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w02",
+      "session_id": "synthetic-s11",
+      "category": "Overlap",
+      "time_s": 12.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.222028,
+        "late_audio": 0.159241,
+        "late_sensor": 0.143496,
+        "continuous": 0.147591,
+        "tokenized": 0.107052,
+        "uncalibrated_continuous": 0.121623,
+        "late_fusion": 0.159241
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w02",
+      "session_id": "synthetic-s11",
+      "category": "Overlap",
+      "time_s": 13.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.131294,
+        "late_audio": 0.151254,
+        "late_sensor": 0.14948,
+        "continuous": 0.090544,
+        "tokenized": 0.035559,
+        "uncalibrated_continuous": 0.126111,
+        "late_fusion": 0.151254
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w02",
+      "session_id": "synthetic-s11",
+      "category": "Overlap",
+      "time_s": 14.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.137418,
+        "late_audio": 0.160867,
+        "late_sensor": 0.140379,
+        "continuous": 0.094722,
+        "tokenized": 0.037157,
+        "uncalibrated_continuous": 0.11855,
+        "late_fusion": 0.160867
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w02",
+      "session_id": "synthetic-s11",
+      "category": "Overlap",
+      "time_s": 15.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.162037,
+        "late_audio": 0.166944,
+        "late_sensor": 0.154561,
+        "continuous": 0.129456,
+        "tokenized": 0.040057,
+        "uncalibrated_continuous": 0.129503,
+        "late_fusion": 0.166944
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w02",
+      "session_id": "synthetic-s11",
+      "category": "Overlap",
+      "time_s": 16.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.121508,
+        "late_audio": 0.151578,
+        "late_sensor": 0.13768,
+        "continuous": 0.076945,
+        "tokenized": 0.037157,
+        "uncalibrated_continuous": 0.109276,
+        "late_fusion": 0.151578
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w02",
+      "session_id": "synthetic-s11",
+      "category": "Overlap",
+      "time_s": 17.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.017173,
+        "late_audio": 0.012587,
+        "late_sensor": 0.035146,
+        "continuous": 0.011133,
+        "tokenized": 0.021864,
+        "uncalibrated_continuous": 0.01217,
+        "late_fusion": 0.012587
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w02",
+      "session_id": "synthetic-s11",
+      "category": "Overlap",
+      "time_s": 18.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.018904,
+        "late_audio": 0.011969,
+        "late_sensor": 0.03386,
+        "continuous": 0.011898,
+        "tokenized": 0.021864,
+        "uncalibrated_continuous": 0.01009,
+        "late_fusion": 0.011969
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w02",
+      "session_id": "synthetic-s11",
+      "category": "Overlap",
+      "time_s": 19.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.019083,
+        "late_audio": 0.011475,
+        "late_sensor": 0.039052,
+        "continuous": 0.011884,
+        "tokenized": 0.021864,
+        "uncalibrated_continuous": 0.010506,
+        "late_fusion": 0.011475
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w03",
+      "session_id": "synthetic-s11",
+      "category": "Gas loss",
+      "time_s": 0.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.028257,
+        "late_audio": 0.007587,
+        "late_sensor": 0.032575,
+        "continuous": 0.010315,
+        "tokenized": 0.021864,
+        "uncalibrated_continuous": 0.00901,
+        "late_fusion": 0.007587
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w03",
+      "session_id": "synthetic-s11",
+      "category": "Gas loss",
+      "time_s": 1.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.022413,
+        "late_audio": 0.008964,
+        "late_sensor": 0.029195,
+        "continuous": 0.009712,
+        "tokenized": 0.021864,
+        "uncalibrated_continuous": 0.009592,
+        "late_fusion": 0.008964
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w03",
+      "session_id": "synthetic-s11",
+      "category": "Gas loss",
+      "time_s": 2.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.039786,
+        "late_audio": 0.010565,
+        "late_sensor": 0.034289,
+        "continuous": 0.012764,
+        "tokenized": 0.022699,
+        "uncalibrated_continuous": 0.015424,
+        "late_fusion": 0.010565
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w03",
+      "session_id": "synthetic-s11",
+      "category": "Gas loss",
+      "time_s": 3.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.164017,
+        "late_audio": 0.101454,
+        "late_sensor": 0.125041,
+        "continuous": 0.051981,
+        "tokenized": 0.01804,
+        "uncalibrated_continuous": 0.035607,
+        "late_fusion": 0.101454
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w03",
+      "session_id": "synthetic-s11",
+      "category": "Gas loss",
+      "time_s": 4.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.215171,
+        "late_audio": 0.111808,
+        "late_sensor": 0.122913,
+        "continuous": 0.074341,
+        "tokenized": 0.048007,
+        "uncalibrated_continuous": 0.083417,
+        "late_fusion": 0.111808
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w03",
+      "session_id": "synthetic-s11",
+      "category": "Gas loss",
+      "time_s": 5.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.194023,
+        "late_audio": 0.109215,
+        "late_sensor": 0.126133,
+        "continuous": 0.076583,
+        "tokenized": 0.114498,
+        "uncalibrated_continuous": 0.08125,
+        "late_fusion": 0.109215
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w03",
+      "session_id": "synthetic-s11",
+      "category": "Gas loss",
+      "time_s": 6.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.178925,
+        "late_audio": 0.118371,
+        "late_sensor": 0.108968,
+        "continuous": 0.065415,
+        "tokenized": 0.01804,
+        "uncalibrated_continuous": 0.0965,
+        "late_fusion": 0.118371
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w03",
+      "session_id": "synthetic-s11",
+      "category": "Gas loss",
+      "time_s": 7.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.155493,
+        "late_audio": 0.126259,
+        "late_sensor": 0.122748,
+        "continuous": 0.070244,
+        "tokenized": 0.01804,
+        "uncalibrated_continuous": 0.085851,
+        "late_fusion": 0.126259
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w03",
+      "session_id": "synthetic-s11",
+      "category": "Gas loss",
+      "time_s": 8.5,
+      "label": 1,
+      "scores": {
+        "late_video": 0.192543,
+        "late_audio": 0.14142,
+        "late_sensor": 0.135456,
+        "continuous": 0.138782,
+        "tokenized": 0.170051,
+        "uncalibrated_continuous": 0.496625,
+        "late_fusion": 0.14142
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w03",
+      "session_id": "synthetic-s11",
+      "category": "Gas loss",
+      "time_s": 9.5,
+      "label": 1,
+      "scores": {
+        "late_video": 0.172174,
+        "late_audio": 0.268564,
+        "late_sensor": 0.163505,
+        "continuous": 0.615481,
+        "tokenized": 0.333097,
+        "uncalibrated_continuous": 0.558579,
+        "late_fusion": 0.268564
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w03",
+      "session_id": "synthetic-s11",
+      "category": "Gas loss",
+      "time_s": 10.5,
+      "label": 1,
+      "scores": {
+        "late_video": 0.199302,
+        "late_audio": 0.224643,
+        "late_sensor": 0.165198,
+        "continuous": 0.517076,
+        "tokenized": 0.578232,
+        "uncalibrated_continuous": 0.09628,
+        "late_fusion": 0.224643
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w03",
+      "session_id": "synthetic-s11",
+      "category": "Gas loss",
+      "time_s": 11.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.171421,
+        "late_audio": 0.096825,
+        "late_sensor": 0.125174,
+        "continuous": 0.053253,
+        "tokenized": 0.01725,
+        "uncalibrated_continuous": 0.076262,
+        "late_fusion": 0.096825
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w03",
+      "session_id": "synthetic-s11",
+      "category": "Gas loss",
+      "time_s": 12.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.19279,
+        "late_audio": 0.128998,
+        "late_sensor": 0.113454,
+        "continuous": 0.083097,
+        "tokenized": 0.048007,
+        "uncalibrated_continuous": 0.106826,
+        "late_fusion": 0.128998
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w03",
+      "session_id": "synthetic-s11",
+      "category": "Gas loss",
+      "time_s": 13.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.17433,
+        "late_audio": 0.132836,
+        "late_sensor": 0.12795,
+        "continuous": 0.093874,
+        "tokenized": 0.044988,
+        "uncalibrated_continuous": 0.083882,
+        "late_fusion": 0.132836
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w03",
+      "session_id": "synthetic-s11",
+      "category": "Gas loss",
+      "time_s": 14.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.197711,
+        "late_audio": 0.120824,
+        "late_sensor": 0.134273,
+        "continuous": 0.085826,
+        "tokenized": 0.048007,
+        "uncalibrated_continuous": 0.098974,
+        "late_fusion": 0.120824
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w03",
+      "session_id": "synthetic-s11",
+      "category": "Gas loss",
+      "time_s": 15.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.174386,
+        "late_audio": 0.119582,
+        "late_sensor": 0.12333,
+        "continuous": 0.069567,
+        "tokenized": 0.01804,
+        "uncalibrated_continuous": 0.075071,
+        "late_fusion": 0.119582
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w03",
+      "session_id": "synthetic-s11",
+      "category": "Gas loss",
+      "time_s": 16.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.167544,
+        "late_audio": 0.121971,
+        "late_sensor": 0.114633,
+        "continuous": 0.084005,
+        "tokenized": 0.044988,
+        "uncalibrated_continuous": 0.008384,
+        "late_fusion": 0.121971
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w03",
+      "session_id": "synthetic-s11",
+      "category": "Gas loss",
+      "time_s": 17.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.023531,
+        "late_audio": 0.006573,
+        "late_sensor": 0.030239,
+        "continuous": 0.008887,
+        "tokenized": 0.021864,
+        "uncalibrated_continuous": 0.009765,
+        "late_fusion": 0.006573
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w03",
+      "session_id": "synthetic-s11",
+      "category": "Gas loss",
+      "time_s": 18.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.025948,
+        "late_audio": 0.00852,
+        "late_sensor": 0.029794,
+        "continuous": 0.010528,
+        "tokenized": 0.021864,
+        "uncalibrated_continuous": 0.008611,
+        "late_fusion": 0.00852
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w03",
+      "session_id": "synthetic-s11",
+      "category": "Gas loss",
+      "time_s": 19.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.019332,
+        "late_audio": 0.007966,
+        "late_sensor": 0.030839,
+        "continuous": 0.009091,
+        "tokenized": 0.021864,
+        "uncalibrated_continuous": 0.009462,
+        "late_fusion": 0.007966
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w04",
+      "session_id": "synthetic-s11",
+      "category": "Spatter",
+      "time_s": 0.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.029715,
+        "late_audio": 0.011105,
+        "late_sensor": 0.033119,
+        "continuous": 0.012344,
+        "tokenized": 0.022699,
+        "uncalibrated_continuous": 0.007945,
+        "late_fusion": 0.011105
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w04",
+      "session_id": "synthetic-s11",
+      "category": "Spatter",
+      "time_s": 1.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.025881,
+        "late_audio": 0.011683,
+        "late_sensor": 0.031807,
+        "continuous": 0.011951,
+        "tokenized": 0.021864,
+        "uncalibrated_continuous": 0.010385,
+        "late_fusion": 0.011683
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w04",
+      "session_id": "synthetic-s11",
+      "category": "Spatter",
+      "time_s": 2.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.035711,
+        "late_audio": 0.010422,
+        "late_sensor": 0.03615,
+        "continuous": 0.010274,
+        "tokenized": 0.049506,
+        "uncalibrated_continuous": 0.009332,
+        "late_fusion": 0.010422
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w04",
+      "session_id": "synthetic-s11",
+      "category": "Spatter",
+      "time_s": 3.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.198383,
+        "late_audio": 0.142949,
+        "late_sensor": 0.130078,
+        "continuous": 0.113819,
+        "tokenized": 0.07093,
+        "uncalibrated_continuous": 0.002387,
+        "late_fusion": 0.142949
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w04",
+      "session_id": "synthetic-s11",
+      "category": "Spatter",
+      "time_s": 4.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.159492,
+        "late_audio": 0.147675,
+        "late_sensor": 0.135899,
+        "continuous": 0.096146,
+        "tokenized": 0.028288,
+        "uncalibrated_continuous": 0.121938,
+        "late_fusion": 0.147675
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w04",
+      "session_id": "synthetic-s11",
+      "category": "Spatter",
+      "time_s": 5.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.216157,
+        "late_audio": 0.153679,
+        "late_sensor": 0.137448,
+        "continuous": 0.140032,
+        "tokenized": 0.07093,
+        "uncalibrated_continuous": 0.118851,
+        "late_fusion": 0.153679
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w04",
+      "session_id": "synthetic-s11",
+      "category": "Spatter",
+      "time_s": 6.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.169309,
+        "late_audio": 0.137534,
+        "late_sensor": 0.133306,
+        "continuous": 0.084225,
+        "tokenized": 0.01804,
+        "uncalibrated_continuous": 0.131796,
+        "late_fusion": 0.137534
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w04",
+      "session_id": "synthetic-s11",
+      "category": "Spatter",
+      "time_s": 7.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.187965,
+        "late_audio": 0.148935,
+        "late_sensor": 0.135846,
+        "continuous": 0.116033,
+        "tokenized": 0.07093,
+        "uncalibrated_continuous": 0.102001,
+        "late_fusion": 0.148935
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w04",
+      "session_id": "synthetic-s11",
+      "category": "Spatter",
+      "time_s": 8.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.218314,
+        "late_audio": 0.167857,
+        "late_sensor": 0.135181,
+        "continuous": 0.159436,
+        "tokenized": 0.07093,
+        "uncalibrated_continuous": 0.129496,
+        "late_fusion": 0.167857
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w04",
+      "session_id": "synthetic-s11",
+      "category": "Spatter",
+      "time_s": 9.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.140784,
+        "late_audio": 0.151064,
+        "late_sensor": 0.140995,
+        "continuous": 0.089955,
+        "tokenized": 0.037157,
+        "uncalibrated_continuous": 0.190587,
+        "late_fusion": 0.151064
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w04",
+      "session_id": "synthetic-s11",
+      "category": "Spatter",
+      "time_s": 10.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.172206,
+        "late_audio": 0.124944,
+        "late_sensor": 0.135448,
+        "continuous": 0.082741,
+        "tokenized": 0.01725,
+        "uncalibrated_continuous": 0.088702,
+        "late_fusion": 0.124944
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w04",
+      "session_id": "synthetic-s11",
+      "category": "Spatter",
+      "time_s": 11.5,
+      "label": 1,
+      "scores": {
+        "late_video": 0.251914,
+        "late_audio": 0.403784,
+        "late_sensor": 0.135933,
+        "continuous": 0.597226,
+        "tokenized": 0.578232,
+        "uncalibrated_continuous": 0.097836,
+        "late_fusion": 0.403784
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w04",
+      "session_id": "synthetic-s11",
+      "category": "Spatter",
+      "time_s": 12.5,
+      "label": 1,
+      "scores": {
+        "late_video": 0.174204,
+        "late_audio": 0.549555,
+        "late_sensor": 0.142569,
+        "continuous": 0.679083,
+        "tokenized": 0.21827,
+        "uncalibrated_continuous": 0.715869,
+        "late_fusion": 0.549555
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w04",
+      "session_id": "synthetic-s11",
+      "category": "Spatter",
+      "time_s": 13.5,
+      "label": 1,
+      "scores": {
+        "late_video": 0.225332,
+        "late_audio": 0.217206,
+        "late_sensor": 0.139116,
+        "continuous": 0.247116,
+        "tokenized": 0.338116,
+        "uncalibrated_continuous": 0.68843,
+        "late_fusion": 0.217206
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w04",
+      "session_id": "synthetic-s11",
+      "category": "Spatter",
+      "time_s": 14.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.173833,
+        "late_audio": 0.12941,
+        "late_sensor": 0.144317,
+        "continuous": 0.091583,
+        "tokenized": 0.025658,
+        "uncalibrated_continuous": 0.166633,
+        "late_fusion": 0.12941
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w04",
+      "session_id": "synthetic-s11",
+      "category": "Spatter",
+      "time_s": 15.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.208171,
+        "late_audio": 0.143979,
+        "late_sensor": 0.131814,
+        "continuous": 0.108504,
+        "tokenized": 0.073996,
+        "uncalibrated_continuous": 0.096343,
+        "late_fusion": 0.143979
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w04",
+      "session_id": "synthetic-s11",
+      "category": "Spatter",
+      "time_s": 16.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.170587,
+        "late_audio": 0.119114,
+        "late_sensor": 0.114098,
+        "continuous": 0.074564,
+        "tokenized": 0.044988,
+        "uncalibrated_continuous": 0.107997,
+        "late_fusion": 0.119114
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w04",
+      "session_id": "synthetic-s11",
+      "category": "Spatter",
+      "time_s": 17.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.020106,
+        "late_audio": 0.01075,
+        "late_sensor": 0.03471,
+        "continuous": 0.010799,
+        "tokenized": 0.021864,
+        "uncalibrated_continuous": 0.067993,
+        "late_fusion": 0.01075
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w04",
+      "session_id": "synthetic-s11",
+      "category": "Spatter",
+      "time_s": 18.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.023476,
+        "late_audio": 0.010116,
+        "late_sensor": 0.03561,
+        "continuous": 0.010787,
+        "tokenized": 0.021864,
+        "uncalibrated_continuous": 0.010055,
+        "late_fusion": 0.010116
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w04",
+      "session_id": "synthetic-s11",
+      "category": "Spatter",
+      "time_s": 19.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.023923,
+        "late_audio": 0.010614,
+        "late_sensor": 0.035232,
+        "continuous": 0.012101,
+        "tokenized": 0.021864,
+        "uncalibrated_continuous": 0.009307,
+        "late_fusion": 0.010614
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w05",
+      "session_id": "synthetic-s11",
+      "category": "Good",
+      "time_s": 0.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.023655,
+        "late_audio": 0.02039,
+        "late_sensor": 0.045083,
+        "continuous": 0.017983,
+        "tokenized": 0.016216,
+        "uncalibrated_continuous": 0.014568,
+        "late_fusion": 0.02039
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w05",
+      "session_id": "synthetic-s11",
+      "category": "Good",
+      "time_s": 1.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.020432,
+        "late_audio": 0.024036,
+        "late_sensor": 0.040879,
+        "continuous": 0.018001,
+        "tokenized": 0.016216,
+        "uncalibrated_continuous": 0.015253,
+        "late_fusion": 0.024036
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w05",
+      "session_id": "synthetic-s11",
+      "category": "Good",
+      "time_s": 2.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.016697,
+        "late_audio": 0.021423,
+        "late_sensor": 0.043257,
+        "continuous": 0.017474,
+        "tokenized": 0.016216,
+        "uncalibrated_continuous": 0.007866,
+        "late_fusion": 0.021423
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w05",
+      "session_id": "synthetic-s11",
+      "category": "Good",
+      "time_s": 3.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.187028,
+        "late_audio": 0.2741,
+        "late_sensor": 0.184011,
+        "continuous": 0.359215,
+        "tokenized": 0.722112,
+        "uncalibrated_continuous": 0.035889,
+        "late_fusion": 0.2741
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w05",
+      "session_id": "synthetic-s11",
+      "category": "Good",
+      "time_s": 4.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.136139,
+        "late_audio": 0.25618,
+        "late_sensor": 0.180365,
+        "continuous": 0.225001,
+        "tokenized": 0.245982,
+        "uncalibrated_continuous": 0.287749,
+        "late_fusion": 0.25618
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w05",
+      "session_id": "synthetic-s11",
+      "category": "Good",
+      "time_s": 5.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.192036,
+        "late_audio": 0.283296,
+        "late_sensor": 0.173064,
+        "continuous": 0.353823,
+        "tokenized": 0.491936,
+        "uncalibrated_continuous": 0.288599,
+        "late_fusion": 0.283296
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w05",
+      "session_id": "synthetic-s11",
+      "category": "Good",
+      "time_s": 6.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.167949,
+        "late_audio": 0.255677,
+        "late_sensor": 0.165242,
+        "continuous": 0.249083,
+        "tokenized": 0.269655,
+        "uncalibrated_continuous": 0.317415,
+        "late_fusion": 0.255677
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w05",
+      "session_id": "synthetic-s11",
+      "category": "Good",
+      "time_s": 7.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.155271,
+        "late_audio": 0.276266,
+        "late_sensor": 0.178417,
+        "continuous": 0.266019,
+        "tokenized": 0.269655,
+        "uncalibrated_continuous": 0.248865,
+        "late_fusion": 0.276266
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w05",
+      "session_id": "synthetic-s11",
+      "category": "Good",
+      "time_s": 8.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.158199,
+        "late_audio": 0.247945,
+        "late_sensor": 0.162241,
+        "continuous": 0.236405,
+        "tokenized": 0.21827,
+        "uncalibrated_continuous": 0.283996,
+        "late_fusion": 0.247945
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w05",
+      "session_id": "synthetic-s11",
+      "category": "Good",
+      "time_s": 9.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.193585,
+        "late_audio": 0.250993,
+        "late_sensor": 0.164327,
+        "continuous": 0.295701,
+        "tokenized": 0.672867,
+        "uncalibrated_continuous": 0.294695,
+        "late_fusion": 0.250993
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w05",
+      "session_id": "synthetic-s11",
+      "category": "Good",
+      "time_s": 10.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.159371,
+        "late_audio": 0.27744,
+        "late_sensor": 0.166709,
+        "continuous": 0.273092,
+        "tokenized": 0.269655,
+        "uncalibrated_continuous": 0.277589,
+        "late_fusion": 0.27744
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w05",
+      "session_id": "synthetic-s11",
+      "category": "Good",
+      "time_s": 11.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.133287,
+        "late_audio": 0.266741,
+        "late_sensor": 0.16912,
+        "continuous": 0.215731,
+        "tokenized": 0.245982,
+        "uncalibrated_continuous": 0.246736,
+        "late_fusion": 0.266741
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w05",
+      "session_id": "synthetic-s11",
+      "category": "Good",
+      "time_s": 12.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.17891,
+        "late_audio": 0.267394,
+        "late_sensor": 0.169406,
+        "continuous": 0.298238,
+        "tokenized": 0.260766,
+        "uncalibrated_continuous": 0.288917,
+        "late_fusion": 0.267394
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w05",
+      "session_id": "synthetic-s11",
+      "category": "Good",
+      "time_s": 13.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.17491,
+        "late_audio": 0.274114,
+        "late_sensor": 0.160876,
+        "continuous": 0.302539,
+        "tokenized": 0.428359,
+        "uncalibrated_continuous": 0.294826,
+        "late_fusion": 0.274114
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w05",
+      "session_id": "synthetic-s11",
+      "category": "Good",
+      "time_s": 14.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.14416,
+        "late_audio": 0.249679,
+        "late_sensor": 0.165791,
+        "continuous": 0.222607,
+        "tokenized": 0.260766,
+        "uncalibrated_continuous": 0.300409,
+        "late_fusion": 0.249679
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w05",
+      "session_id": "synthetic-s11",
+      "category": "Good",
+      "time_s": 15.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.182246,
+        "late_audio": 0.265705,
+        "late_sensor": 0.179966,
+        "continuous": 0.315447,
+        "tokenized": 0.491936,
+        "uncalibrated_continuous": 0.227909,
+        "late_fusion": 0.265705
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w05",
+      "session_id": "synthetic-s11",
+      "category": "Good",
+      "time_s": 16.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.122072,
+        "late_audio": 0.258929,
+        "late_sensor": 0.155575,
+        "continuous": 0.17172,
+        "tokenized": 0.205227,
+        "uncalibrated_continuous": 0.377315,
+        "late_fusion": 0.258929
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w05",
+      "session_id": "synthetic-s11",
+      "category": "Good",
+      "time_s": 17.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.017825,
+        "late_audio": 0.024412,
+        "late_sensor": 0.041681,
+        "continuous": 0.019131,
+        "tokenized": 0.016216,
+        "uncalibrated_continuous": 0.055867,
+        "late_fusion": 0.024412
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w05",
+      "session_id": "synthetic-s11",
+      "category": "Good",
+      "time_s": 18.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.023856,
+        "late_audio": 0.020281,
+        "late_sensor": 0.044172,
+        "continuous": 0.019075,
+        "tokenized": 0.016216,
+        "uncalibrated_continuous": 0.017117,
+        "late_fusion": 0.020281
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w05",
+      "session_id": "synthetic-s11",
+      "category": "Good",
+      "time_s": 19.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.024254,
+        "late_audio": 0.02463,
+        "late_sensor": 0.042837,
+        "continuous": 0.023196,
+        "tokenized": 0.016216,
+        "uncalibrated_continuous": 0.017009,
+        "late_fusion": 0.02463
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w06",
+      "session_id": "synthetic-s11",
+      "category": "Overlap",
+      "time_s": 0.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.0453,
+        "late_audio": 0.008056,
+        "late_sensor": 0.035797,
+        "continuous": 0.010286,
+        "tokenized": 0.022699,
+        "uncalibrated_continuous": 0.009116,
+        "late_fusion": 0.008056
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w06",
+      "session_id": "synthetic-s11",
+      "category": "Overlap",
+      "time_s": 1.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.046722,
+        "late_audio": 0.010168,
+        "late_sensor": 0.035041,
+        "continuous": 0.013217,
+        "tokenized": 0.022699,
+        "uncalibrated_continuous": 0.011244,
+        "late_fusion": 0.010168
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w06",
+      "session_id": "synthetic-s11",
+      "category": "Overlap",
+      "time_s": 2.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.050848,
+        "late_audio": 0.008155,
+        "late_sensor": 0.045232,
+        "continuous": 0.009432,
+        "tokenized": 0.053429,
+        "uncalibrated_continuous": 0.010939,
+        "late_fusion": 0.008155
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w06",
+      "session_id": "synthetic-s11",
+      "category": "Overlap",
+      "time_s": 3.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.245344,
+        "late_audio": 0.141421,
+        "late_sensor": 0.142734,
+        "continuous": 0.132931,
+        "tokenized": 0.107052,
+        "uncalibrated_continuous": 0.147165,
+        "late_fusion": 0.141421
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w06",
+      "session_id": "synthetic-s11",
+      "category": "Overlap",
+      "time_s": 4.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.223921,
+        "late_audio": 0.144331,
+        "late_sensor": 0.133762,
+        "continuous": 0.126622,
+        "tokenized": 0.073996,
+        "uncalibrated_continuous": 0.140812,
+        "late_fusion": 0.144331
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w06",
+      "session_id": "synthetic-s11",
+      "category": "Overlap",
+      "time_s": 5.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.276136,
+        "late_audio": 0.120599,
+        "late_sensor": 0.135668,
+        "continuous": 0.122149,
+        "tokenized": 0.045965,
+        "uncalibrated_continuous": 0.123392,
+        "late_fusion": 0.120599
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w06",
+      "session_id": "synthetic-s11",
+      "category": "Overlap",
+      "time_s": 6.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.23151,
+        "late_audio": 0.127339,
+        "late_sensor": 0.140968,
+        "continuous": 0.115564,
+        "tokenized": 0.067411,
+        "uncalibrated_continuous": 0.142288,
+        "late_fusion": 0.127339
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w06",
+      "session_id": "synthetic-s11",
+      "category": "Overlap",
+      "time_s": 7.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.27612,
+        "late_audio": 0.129043,
+        "late_sensor": 0.14131,
+        "continuous": 0.1453,
+        "tokenized": 0.162474,
+        "uncalibrated_continuous": 0.201545,
+        "late_fusion": 0.129043
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w06",
+      "session_id": "synthetic-s11",
+      "category": "Overlap",
+      "time_s": 8.5,
+      "label": 1,
+      "scores": {
+        "late_video": 0.369396,
+        "late_audio": 0.254627,
+        "late_sensor": 0.160879,
+        "continuous": 0.50348,
+        "tokenized": 0.433879,
+        "uncalibrated_continuous": 0.649559,
+        "late_fusion": 0.254627
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w06",
+      "session_id": "synthetic-s11",
+      "category": "Overlap",
+      "time_s": 9.5,
+      "label": 1,
+      "scores": {
+        "late_video": 0.47773,
+        "late_audio": 0.341045,
+        "late_sensor": 0.192566,
+        "continuous": 0.801255,
+        "tokenized": 0.491936,
+        "uncalibrated_continuous": 0.700814,
+        "late_fusion": 0.341045
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w06",
+      "session_id": "synthetic-s11",
+      "category": "Overlap",
+      "time_s": 10.5,
+      "label": 1,
+      "scores": {
+        "late_video": 0.294461,
+        "late_audio": 0.164397,
+        "late_sensor": 0.15834,
+        "continuous": 0.220617,
+        "tokenized": 0.107052,
+        "uncalibrated_continuous": 0.177086,
+        "late_fusion": 0.164397
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w06",
+      "session_id": "synthetic-s11",
+      "category": "Overlap",
+      "time_s": 11.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.274225,
+        "late_audio": 0.131569,
+        "late_sensor": 0.15137,
+        "continuous": 0.142287,
+        "tokenized": 0.070336,
+        "uncalibrated_continuous": 0.169081,
+        "late_fusion": 0.131569
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w06",
+      "session_id": "synthetic-s11",
+      "category": "Overlap",
+      "time_s": 12.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.286011,
+        "late_audio": 0.139984,
+        "late_sensor": 0.145505,
+        "continuous": 0.160735,
+        "tokenized": 0.070336,
+        "uncalibrated_continuous": 0.184153,
+        "late_fusion": 0.139984
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w06",
+      "session_id": "synthetic-s11",
+      "category": "Overlap",
+      "time_s": 13.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.273805,
+        "late_audio": 0.139034,
+        "late_sensor": 0.148037,
+        "continuous": 0.161889,
+        "tokenized": 0.067411,
+        "uncalibrated_continuous": 0.162477,
+        "late_fusion": 0.139034
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w06",
+      "session_id": "synthetic-s11",
+      "category": "Overlap",
+      "time_s": 14.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.268887,
+        "late_audio": 0.145447,
+        "late_sensor": 0.137534,
+        "continuous": 0.146602,
+        "tokenized": 0.107052,
+        "uncalibrated_continuous": 0.153569,
+        "late_fusion": 0.145447
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w06",
+      "session_id": "synthetic-s11",
+      "category": "Overlap",
+      "time_s": 15.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.238079,
+        "late_audio": 0.125464,
+        "late_sensor": 0.143427,
+        "continuous": 0.120906,
+        "tokenized": 0.162474,
+        "uncalibrated_continuous": 0.133338,
+        "late_fusion": 0.125464
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w06",
+      "session_id": "synthetic-s11",
+      "category": "Overlap",
+      "time_s": 16.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.181846,
+        "late_audio": 0.130185,
+        "late_sensor": 0.141705,
+        "continuous": 0.089027,
+        "tokenized": 0.026824,
+        "uncalibrated_continuous": 0.046986,
+        "late_fusion": 0.130185
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w06",
+      "session_id": "synthetic-s11",
+      "category": "Overlap",
+      "time_s": 17.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.050342,
+        "late_audio": 0.00934,
+        "late_sensor": 0.038178,
+        "continuous": 0.012418,
+        "tokenized": 0.022699,
+        "uncalibrated_continuous": 0.011362,
+        "late_fusion": 0.00934
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w06",
+      "session_id": "synthetic-s11",
+      "category": "Overlap",
+      "time_s": 18.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.047948,
+        "late_audio": 0.009507,
+        "late_sensor": 0.036698,
+        "continuous": 0.013259,
+        "tokenized": 0.022699,
+        "uncalibrated_continuous": 0.01159,
+        "late_fusion": 0.009507
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w06",
+      "session_id": "synthetic-s11",
+      "category": "Overlap",
+      "time_s": 19.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.050686,
+        "late_audio": 0.009613,
+        "late_sensor": 0.037012,
+        "continuous": 0.012539,
+        "tokenized": 0.022699,
+        "uncalibrated_continuous": 0.010563,
+        "late_fusion": 0.009613
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w07",
+      "session_id": "synthetic-s11",
+      "category": "Gas loss",
+      "time_s": 0.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.027086,
+        "late_audio": 0.011694,
+        "late_sensor": 0.048583,
+        "continuous": 0.011458,
+        "tokenized": 0.051523,
+        "uncalibrated_continuous": 0.011084,
+        "late_fusion": 0.011694
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w07",
+      "session_id": "synthetic-s11",
+      "category": "Gas loss",
+      "time_s": 1.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.029373,
+        "late_audio": 0.012319,
+        "late_sensor": 0.051855,
+        "continuous": 0.012359,
+        "tokenized": 0.023651,
+        "uncalibrated_continuous": 0.01153,
+        "late_fusion": 0.012319
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w07",
+      "session_id": "synthetic-s11",
+      "category": "Gas loss",
+      "time_s": 2.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.031301,
+        "late_audio": 0.01473,
+        "late_sensor": 0.052895,
+        "continuous": 0.01587,
+        "tokenized": 0.018223,
+        "uncalibrated_continuous": 0.020443,
+        "late_fusion": 0.01473
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w07",
+      "session_id": "synthetic-s11",
+      "category": "Gas loss",
+      "time_s": 3.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.169364,
+        "late_audio": 0.186815,
+        "late_sensor": 0.197434,
+        "continuous": 0.185159,
+        "tokenized": 0.260766,
+        "uncalibrated_continuous": 0.178524,
+        "late_fusion": 0.186815
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w07",
+      "session_id": "synthetic-s11",
+      "category": "Gas loss",
+      "time_s": 4.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.180929,
+        "late_audio": 0.162391,
+        "late_sensor": 0.203863,
+        "continuous": 0.15843,
+        "tokenized": 0.052294,
+        "uncalibrated_continuous": 0.194172,
+        "late_fusion": 0.162391
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w07",
+      "session_id": "synthetic-s11",
+      "category": "Gas loss",
+      "time_s": 5.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.20187,
+        "late_audio": 0.167462,
+        "late_sensor": 0.183675,
+        "continuous": 0.160746,
+        "tokenized": 0.131538,
+        "uncalibrated_continuous": 0.193285,
+        "late_fusion": 0.167462
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w07",
+      "session_id": "synthetic-s11",
+      "category": "Gas loss",
+      "time_s": 6.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.229499,
+        "late_audio": 0.184359,
+        "late_sensor": 0.19125,
+        "continuous": 0.224829,
+        "tokenized": 0.503339,
+        "uncalibrated_continuous": 0.27603,
+        "late_fusion": 0.184359
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w07",
+      "session_id": "synthetic-s11",
+      "category": "Gas loss",
+      "time_s": 7.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.214138,
+        "late_audio": 0.182525,
+        "late_sensor": 0.195576,
+        "continuous": 0.22186,
+        "tokenized": 0.126413,
+        "uncalibrated_continuous": 0.241061,
+        "late_fusion": 0.182525
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w07",
+      "session_id": "synthetic-s11",
+      "category": "Gas loss",
+      "time_s": 8.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.210011,
+        "late_audio": 0.170911,
+        "late_sensor": 0.203552,
+        "continuous": 0.212396,
+        "tokenized": 0.279725,
+        "uncalibrated_continuous": 0.211787,
+        "late_fusion": 0.170911
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w07",
+      "session_id": "synthetic-s11",
+      "category": "Gas loss",
+      "time_s": 9.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.205201,
+        "late_audio": 0.181468,
+        "late_sensor": 0.195232,
+        "continuous": 0.206472,
+        "tokenized": 0.126413,
+        "uncalibrated_continuous": 0.230033,
+        "late_fusion": 0.181468
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w07",
+      "session_id": "synthetic-s11",
+      "category": "Gas loss",
+      "time_s": 10.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.211431,
+        "late_audio": 0.17421,
+        "late_sensor": 0.195706,
+        "continuous": 0.196955,
+        "tokenized": 0.131538,
+        "uncalibrated_continuous": 0.204776,
+        "late_fusion": 0.17421
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w07",
+      "session_id": "synthetic-s11",
+      "category": "Gas loss",
+      "time_s": 11.5,
+      "label": 1,
+      "scores": {
+        "late_video": 0.208394,
+        "late_audio": 0.188973,
+        "late_sensor": 0.189453,
+        "continuous": 0.200004,
+        "tokenized": 0.503339,
+        "uncalibrated_continuous": 0.411368,
+        "late_fusion": 0.188973
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w07",
+      "session_id": "synthetic-s11",
+      "category": "Gas loss",
+      "time_s": 12.5,
+      "label": 1,
+      "scores": {
+        "late_video": 0.192599,
+        "late_audio": 0.359866,
+        "late_sensor": 0.271882,
+        "continuous": 0.85739,
+        "tokenized": 0.722112,
+        "uncalibrated_continuous": 0.855513,
+        "late_fusion": 0.359866
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w07",
+      "session_id": "synthetic-s11",
+      "category": "Gas loss",
+      "time_s": 13.5,
+      "label": 1,
+      "scores": {
+        "late_video": 0.198741,
+        "late_audio": 0.330686,
+        "late_sensor": 0.256827,
+        "continuous": 0.810474,
+        "tokenized": 0.722112,
+        "uncalibrated_continuous": 0.612258,
+        "late_fusion": 0.330686
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w07",
+      "session_id": "synthetic-s11",
+      "category": "Gas loss",
+      "time_s": 14.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.181469,
+        "late_audio": 0.162904,
+        "late_sensor": 0.2193,
+        "continuous": 0.182949,
+        "tokenized": 0.123949,
+        "uncalibrated_continuous": 0.234465,
+        "late_fusion": 0.162904
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w07",
+      "session_id": "synthetic-s11",
+      "category": "Gas loss",
+      "time_s": 15.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.202698,
+        "late_audio": 0.195992,
+        "late_sensor": 0.202806,
+        "continuous": 0.235074,
+        "tokenized": 0.491936,
+        "uncalibrated_continuous": 0.25331,
+        "late_fusion": 0.195992
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w07",
+      "session_id": "synthetic-s11",
+      "category": "Gas loss",
+      "time_s": 16.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.150378,
+        "late_audio": 0.167744,
+        "late_sensor": 0.194899,
+        "continuous": 0.134833,
+        "tokenized": 0.052294,
+        "uncalibrated_continuous": 0.049075,
+        "late_fusion": 0.167744
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w07",
+      "session_id": "synthetic-s11",
+      "category": "Gas loss",
+      "time_s": 17.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.027369,
+        "late_audio": 0.013178,
+        "late_sensor": 0.050425,
+        "continuous": 0.013867,
+        "tokenized": 0.023651,
+        "uncalibrated_continuous": 0.012968,
+        "late_fusion": 0.013178
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w07",
+      "session_id": "synthetic-s11",
+      "category": "Gas loss",
+      "time_s": 18.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.028309,
+        "late_audio": 0.013179,
+        "late_sensor": 0.053216,
+        "continuous": 0.015211,
+        "tokenized": 0.023651,
+        "uncalibrated_continuous": 0.012671,
+        "late_fusion": 0.013179
+      }
+    },
+    {
+      "episode_id": "synthetic-s11-w07",
+      "session_id": "synthetic-s11",
+      "category": "Gas loss",
+      "time_s": 19.5,
+      "label": 0,
+      "scores": {
+        "late_video": 0.023931,
+        "late_audio": 0.012296,
+        "late_sensor": 0.055947,
+        "continuous": 0.011794,
+        "tokenized": 0.023651,
+        "uncalibrated_continuous": 0.011656,
+        "late_fusion": 0.012296
+      }
+    }
+  ]
+}
