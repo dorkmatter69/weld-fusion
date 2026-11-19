@@ -1,0 +1,76 @@
+# Audio features, exploratory MCAP, and clock evidence
+
+The one-weld video feature export is complete. The pilot FLAC and CSV were
+copied within GCS into the isolated pilot bucket; their byte counts and GCS
+MD5 values match the source objects. The source media are not committed to
+Git and do not need to download to the Mac.
+
+With the same `WELDOPS_*` shell variables used for the video pilot, run:
+
+```bash
+git pull --ff-only
+.venv/bin/modal run scripts/modal_audio_mcap_pilot.py
+```
+
+The bounded CPU Sandbox downloads only this pilot's AVI, FLAC and CSV through
+short-lived signed GET URLs. It writes:
+
+- `features/audio-stft-16k/<sample>.npz`: mono audio at its released 16 kHz
+  rate; 1,366-sample Hann windows (85.375 ms), 683-sample hops (42.6875 ms),
+  684 frequency bins, `log1p` magnitude, and sample-relative frame centers.
+  These time-matched windows are an experimental adaptation. The paper used
+  16,384-sample windows at 192 kHz (85.333 ms), which cannot be recovered from
+  the released 16 kHz FLAC. No audio autoencoder has been trained yet.
+- `mcap/pilot/<sample>.mcap`: `/weld/meta`, `/weld/alignment`,
+  `/sensors/weld` (all 335 sensor rows), `/video/brightness` (all 1,119
+  frames), and `/audio/rms` (50 ms envelope). Raw AVI and FLAC remain
+  separate and are referenced by identity; the MCAP does not contain their
+  waveform or video frames. It is an exploratory view with independent
+  file-relative clocks, not a verified synchronized log.
+
+Both output objects are create-only and are checked against their GCS size
+and MD5 metadata. The worker prints SHA-256 digests. The pilot's category and
+train/validation/test split remain `null` until an authoritative manifest
+record is audited. Do not infer a Good training label from the file stem.
+
+## Are the streams synchronized?
+
+**No.** The file lengths and candidate arc boundaries are currently:
+
+| Stream | Time basis | Recorded span | Candidate arc-on | Candidate arc-off |
+| --- | --- | ---: | ---: | ---: |
+| Video | first AVI frame, nominal 31 FPS | 36.097 s | 5.677 s | 30.968 s |
+| Audio | first FLAC sample, 16 kHz | 38.000 s | 4.750 s | 30.800 s |
+| Sensors | first CSV Date/Time row; timezone unknown | 37.142 s | 6.145 s | 32.129 s |
+
+Relative to video, sensor arc-on differs by +0.468 s and arc-off by +1.161 s.
+Audio arc-on differs by −0.927 s and arc-off by −0.168 s. The changing
+differences could come from frame-rate error, device start delay, threshold
+differences, or more than one of these. The paper notes that video FPS varied
+from nominal and used audio event duration as an alignment reference.
+
+For inspection, a two-boundary affine candidate is
+`t_sensor = 1.027429 * t_video + 0.311857`, and
+`t_audio = 1.030038 * t_video - 1.097959` (seconds from each file's own
+start). Two points fit these lines by construction, so they provide **no
+independent validation** of the map. They are not applied to MCAP timestamps
+or training features.
+
+## Verification needed before a shared clock
+
+1. Inspect current, audio energy and image brightness around both arc
+   boundaries. Mark the physical event with an interval of uncertainty,
+   rather than assuming the screening threshold identifies the same moment
+   in all streams.
+2. Check independent landmarks inside the weld and compare residuals under
+   an offset-only mapping and an affine offset-plus-rate mapping. Verify
+   actual AVI frame timing or a per-frame timestamp source; nominal 31 FPS
+   alone is insufficient to establish clock drift.
+3. Keep the original audio sample indices, AVI frame indices and CSV Date/Time
+   values as provenance. Only then write calibrated mappings, their evidence
+   and uncertainty into a new MCAP or episode version. Preserve this
+   exploratory version as unaligned.
+
+Whole-weld anomaly score fusion can be evaluated after authoritative labels
+are found, even while per-frame clocks remain unresolved. Any per-frame
+audio/video/sensor fusion requires the verified mapping first.
