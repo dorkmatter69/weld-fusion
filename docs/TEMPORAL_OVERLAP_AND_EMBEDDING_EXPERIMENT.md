@@ -130,6 +130,11 @@ vectors and labels; keep it in authorized storage. FFmpeg/ffprobe and model
 weights must be installed on the worker. The exporter refuses overwrite.
 The **Explore synthetic demo** button exercises filtering and similarity UI
 with fabricated vectors and labels; it is never a model result.
+The index builder defaults to **24 segments maximum** so the first run is a
+bounded pilot. Increase `--max-segments` only after measuring time and reviewing
+the chosen media cohort; the first rows are processed in manifest order, so
+prepare a small, balanced media manifest for any retrieval comparison. This
+is not a full-dataset export by default.
 For the dataset's research terms, review the authorized compute environment
 and transfer route before moving private media.
 
