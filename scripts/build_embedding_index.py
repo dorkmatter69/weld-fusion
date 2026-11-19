@@ -46,11 +46,15 @@ def ffprobe_seconds(path):
     return float(result.stdout.strip())
 
 
-def encode_clips(manifest, output, width=4.0, hop=2.0, fps=4):
-    from sentence_transformers import SentenceTransformer
-
+def encode_clips(manifest, output, width=4.0, hop=2.0, fps=4, max_segments=24):
     rows = json.loads(manifest.read_text())
     validate_manifest(rows)
+    if max_segments < 1 or width <= 0 or hop <= 0 or fps < 1:
+        raise ValueError("clip, hop, fps and max_segments must be positive")
+    if output.exists():
+        raise FileExistsError("refusing to overwrite existing index")
+    from sentence_transformers import SentenceTransformer
+
     model = SentenceTransformer("google/embeddinggemma-2")
     results = []
     for row in rows:
@@ -61,6 +65,8 @@ def encode_clips(manifest, output, width=4.0, hop=2.0, fps=4):
         duration = min(ffprobe_seconds(video), ffprobe_seconds(audio))
         with tempfile.TemporaryDirectory(prefix="weld-embed-") as temp:
             for i, (start, end) in enumerate(windows(duration, width, hop)):
+                if len(results) >= max_segments:
+                    break
                 mp4 = Path(temp) / "clip.mp4"
                 wav = Path(temp) / "clip.wav"
                 subprocess.run(["ffmpeg", "-nostdin", "-loglevel", "error", "-y", "-ss", str(start),
@@ -83,11 +89,12 @@ def encode_clips(manifest, output, width=4.0, hop=2.0, fps=4):
                                 "session_id": row["session_id"], "split": row["split"],
                                 "category": row["category"], "start_s": start, "end_s": end,
                                 "embeddings": vectors})
+        if len(results) >= max_segments:
+            break
     output.parent.mkdir(parents=True, exist_ok=True)
-    if output.exists():
-        raise FileExistsError("refusing to overwrite existing index")
     output.write_text(json.dumps({"schema_version": 1, "model": "google/embeddinggemma-2",
                                   "clip_seconds": width, "hop_seconds": hop, "video_fps": fps,
+                                  "max_segments": max_segments,
                                   "clock_alignment_verified": False, "segments": results}) + "\n")
     return len(results)
 
@@ -99,10 +106,12 @@ def main(argv=None):
     p.add_argument("--clip-seconds", type=float, default=4.0)
     p.add_argument("--hop-seconds", type=float, default=2.0)
     p.add_argument("--video-fps", type=int, default=4)
+    p.add_argument("--max-segments", type=int, default=24,
+                   help="bounded pilot; default 24 short segments")
     args = p.parse_args(argv)
     if args.video_fps < 1 or args.video_fps * args.clip_seconds > 58:
         p.error("clip consumes too many video frames for default token budget")
-    print(f"Indexed {encode_clips(args.manifest, args.output, args.clip_seconds, args.hop_seconds, args.video_fps)} segments")
+    print(f"Indexed {encode_clips(args.manifest, args.output, args.clip_seconds, args.hop_seconds, args.video_fps, args.max_segments)} segments")
 
 
 if __name__ == "__main__":
