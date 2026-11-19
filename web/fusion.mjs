@@ -1,6 +1,6 @@
 import {modes,validateReport,episodes,rowsFor} from './fusion-core.mjs';
 const $=id=>document.getElementById(id);
-const labels={late_video:'Video only',late_audio:'Audio only',late_fusion:'Late audio–video',continuous:'Calibrated continuous',tokenized:'Calibrated tokens',uncalibrated_continuous:'Uncalibrated continuous'};
+const labels={late_video:'Video only',late_audio:'Audio only',late_sensor:'Sensor only',late_fusion:'Late audio–video',continuous:'Calibrated continuous',tokenized:'Calibrated tokens',uncalibrated_continuous:'Uncalibrated continuous'};
 let report=null;
 function option(id,value,text){$(id).append(new Option(text,value));}
 function init(data){
@@ -10,6 +10,14 @@ function init(data){
   $('sessions').textContent=report.session_count;
   $('windows').textContent=report.test_windows.length;
   $('clock').textContent='3 + 1 landmarks';
+  $('fusion-gate').textContent=`Aligned fusion: ${report.fusion_gate.reason}. This gate applies to this synthetic report only; recorded media requires separately reviewed landmarks.`;
+  $('profile-rows').replaceChildren();
+  for(const mode of ['video','audio','sensor']){
+    const p=report.modality_profiles[mode],row=document.createElement('tr');
+    const values=[mode,p.representation,`${p.median_rate_hz} Hz · ${p.elements_per_episode} / episode`,p.structure,p.task_relevance_hypothesis,`${p.noise_and_uncertainty}; ${(p.missing_window_fraction*100).toFixed(1)}% empty bins; max held-out clock error ${p.max_held_out_clock_residual_ms} ms`];
+    for(const value of values){const cell=document.createElement('td');cell.textContent=value;row.append(cell);}
+    $('profile-rows').append(row);
+  }
   $('status').textContent=`Synthetic seed ${report.seed} · ${report.splits.TRAIN} training, ${report.splits.VALIDATION} validation and ${report.splits.TEST} test welds · late-video weight ${report.late_video_weight_selected_on_validation.toFixed(2)}`;
   render();
 }

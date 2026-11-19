@@ -1,7 +1,14 @@
 import numpy as np
 import pytest
 
-from weldfusion.multimodal_benchmark import fit_clock, generate, run, windows_for
+from weldfusion.multimodal_benchmark import fit_clock, fusion_gate, generate, run, windows_for
+
+
+def test_recorded_fusion_requires_independent_approved_clock_review():
+    assert not fusion_gate("recorded", {"independent_holdout_passed": False})["aligned_fusion_allowed"]
+    assert not fusion_gate("recorded", {"independent_holdout_passed": True})["aligned_fusion_allowed"]
+    assert fusion_gate("recorded", {"independent_holdout_passed": True,
+                                    "review_status": "approved"})["aligned_fusion_allowed"]
 
 
 def test_clock_fit_uses_independent_landmark_and_rejects_bad_fit():
@@ -30,6 +37,9 @@ def test_fixed_seed_report_tracks_all_models_and_frozen_test_split():
     report = run()
     assert report["data_kind"] == "simulation"
     assert report["session_count"] == 12
+    assert report["fusion_gate"]["aligned_fusion_allowed"]
+    assert set(report["modality_profiles"]) == {"video", "audio", "sensor"}
+    assert report["modality_profiles"]["audio"]["elements_per_episode"] == 500
     assert report["splits"] == {"TRAIN": 64, "VALIDATION": 16, "TEST": 16}
     assert len(report["test_windows"]) == 320
     assert set(report["per_category"]) == {"Overlap", "Gas loss", "Spatter"}

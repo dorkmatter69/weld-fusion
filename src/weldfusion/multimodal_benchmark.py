@@ -18,6 +18,41 @@ WIDTHS = {"video": 1, "audio": 1, "sensor": 2}
 SEED = 42
 
 
+def fusion_gate(data_kind, clock_evidence):
+    """Restrict time-aligned fusion to independently checked clock maps."""
+    verified = bool(clock_evidence.get("independent_holdout_passed"))
+    if data_kind == "simulation" and verified:
+        return {"aligned_fusion_allowed": True, "reason": "simulated independent clock landmarks passed"}
+    if data_kind == "recorded" and verified and clock_evidence.get("review_status") == "approved":
+        return {"aligned_fusion_allowed": True, "reason": "recorded independent landmarks approved"}
+    return {"aligned_fusion_allowed": False, "reason": "independent recorded clock review is incomplete"}
+
+
+def modality_profiles(episodes):
+    """Measured properties of generated sources, not inferred real-data properties."""
+    descriptions = {
+        "video": ("continuous brightness proxy", "temporal", "arc appearance"),
+        "audio": ("continuous energy proxy", "temporal", "acoustic events"),
+        "sensor": ("two continuous process channels", "temporal", "current and gas flow"),
+    }
+    result = {}
+    for mode in MODALITIES:
+        lengths = [len(e["streams"][mode]["local_t"]) for e in episodes]
+        deltas = np.concatenate([np.diff(e["streams"][mode]["local_t"]) for e in episodes])
+        residuals = [e["clock_models"][mode]["held_out_residual_s"] for e in episodes]
+        coverage = [windows_for(e)[0][:, 4 + MODALITIES.index(mode)] for e in episodes]
+        representation, structure, relevance = descriptions[mode]
+        result[mode] = {
+            "representation": representation, "structure": structure,
+            "task_relevance_hypothesis": relevance,
+            "elements_per_episode": lengths[0], "median_rate_hz": round(float(1 / np.median(deltas)), 3),
+            "max_held_out_clock_residual_ms": round(float(max(residuals) * 1000), 3),
+            "missing_window_fraction": round(float(1 - np.mean(coverage)), 5),
+            "noise_and_uncertainty": "simulated sample noise and device-clock fit error",
+        }
+    return result
+
+
 def fit_clock(anchors_global, anchors_local):
     """Map device time to reference time using independent, held-out landmarks."""
     reference = np.asarray(anchors_global, float)
@@ -155,6 +190,12 @@ def metrics(y, scores):
 
 def run(seed=SEED):
     episodes = generate(seed)
+    clock_evidence = {"independent_holdout_passed": all(
+        e["clock_models"][mode]["held_out_residual_s"] <= 0.12
+        for e in episodes for mode in MODALITIES), "source": "synthetic_landmarks"}
+    gate = fusion_gate("simulation", clock_evidence)
+    if not gate["aligned_fusion_allowed"]:
+        raise ValueError("synthetic clock calibration failed: aligned fusion disabled")
     aligned = {e["id"]: windows_for(e, True) for e in episodes}
     naive = {e["id"]: windows_for(e, False) for e in episodes}
     def collect(split, data):
@@ -195,6 +236,8 @@ def run(seed=SEED):
     return {"protocol": "synthetic_multimodal_fusion_v1", "seed": seed,
             "data_kind": "simulation", "training": "supervised_synthetic_only",
             "clock_alignment": "affine_from_three_landmarks_fourth_held_out",
+            "clock_evidence": clock_evidence, "fusion_gate": gate,
+            "modality_profiles": modality_profiles(episodes),
             "session_count": len({e["session_id"] for e in episodes}),
             "splits": {s: sum(e["split"] == s for e in episodes) for s in ("TRAIN", "VALIDATION", "TEST")},
             "late_video_weight_selected_on_validation": best_weight,

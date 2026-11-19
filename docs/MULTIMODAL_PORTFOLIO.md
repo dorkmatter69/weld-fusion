@@ -24,7 +24,7 @@ the CLI and compare outputs before using it in a presentation.
 
 | Portfolio capability | Evidence in this repository |
 | --- | --- |
-| Multimodal ingestion and time series | Independent video, audio and sensor clocks with validated calibration landmarks and interval features |
+| Multimodal ingestion and time series | Independent video, audio and sensor clocks with validated calibration landmarks, explicit modality profiles and interval features |
 | Model development | Unimodal baselines, validation-selected late fusion, continuous interactions and discretized ablation |
 | Reproducible evaluation | Session-disjoint partitions, defect slices, deterministic seed and inspectable window scores |
 | Model review and visualization | Local dashboard with defect filtering, episode timelines and a separate embedding explorer |
@@ -67,6 +67,16 @@ One-second bins are constructed after calibration. The uncalibrated ablation
 uses raw device time for the same binning. This deliberately tests the impact
 of timing error. It does not establish an actual hardware synchronization result.
 
+The generated report also records each stream's representation, measured
+sampling distribution, temporal structure, task relevance hypothesis, simulated
+noise, missing-window fraction and maximum held-out clock residual. The
+dashboard reads these profiles from the report. A programmatic fusion gate
+admits aligned comparison for this **synthetic** report only after independent
+landmarks pass. For recorded data, the gate requires both an independent
+holdout pass and an explicit approved review status; otherwise time-aligned
+fusion must not run. This rule does not itself validate real clock landmarks.
+Late scores can be compared without assuming frame-level correspondence.
+
 The synthetic faults are visible in selected proxies: Overlap changes brightness
 and audio energy, gas loss changes sensor flow and audio, and spatter changes
 audio and video. This is a teaching construction, **not a physics-accurate
@@ -87,6 +97,11 @@ can model limited interactions. Video, audio and sensor baselines use their own
 channels. Late fusion combines independent video/audio probabilities, selecting
 its weight on validation AUC in 0.05 steps. This synthetic task is supervised;
 Intel's anomaly models train on Good examples only.
+
+The sensor-only baseline is displayed alongside video and audio in the overall
+and per-defect dashboard. Its numeric input is a fabricated current/gas pair,
+not a force-torque or robot proprioception stream. The per-defect table tests
+the slide's *task relevance* dimension; it does not compute information entropy.
 
 Metrics in the page are **window-level**, not weld-level. Per-category slices
 include Good windows and every window in the chosen defective welds; only
@@ -135,6 +150,12 @@ not be committed.
    missing streams, then compare early fusion against same-cohort late fusion.
 4. Only after measured inference profiling, evaluate export to ONNX or an edge
    runtime. Quantization claims require measured accuracy and device latency.
+5. Test Timestral as a separate sensor-only **forecasting** baseline once the
+   real CSV columns, units, cadence, missing intervals, labels and session
+   partitions are audited. Forecast only future sensor readings from prior
+   measurements. Choose an anomaly threshold on validation welds and evaluate
+   held-out weld-level detection and delay. Never treat this dashboard's
+   synthetic logistic AUC as a measured Timestral result.
 
 ## Verify
 

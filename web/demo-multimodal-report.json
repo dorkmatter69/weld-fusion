@@ -4,6 +4,46 @@
   "data_kind": "simulation",
   "training": "supervised_synthetic_only",
   "clock_alignment": "affine_from_three_landmarks_fourth_held_out",
+  "clock_evidence": {
+    "independent_holdout_passed": true,
+    "source": "synthetic_landmarks"
+  },
+  "fusion_gate": {
+    "aligned_fusion_allowed": true,
+    "reason": "simulated independent clock landmarks passed"
+  },
+  "modality_profiles": {
+    "video": {
+      "representation": "continuous brightness proxy",
+      "structure": "temporal",
+      "task_relevance_hypothesis": "arc appearance",
+      "elements_per_episode": 100,
+      "median_rate_hz": 5.004,
+      "max_held_out_clock_residual_ms": 19.17,
+      "missing_window_fraction": 0.0,
+      "noise_and_uncertainty": "simulated sample noise and device-clock fit error"
+    },
+    "audio": {
+      "representation": "continuous energy proxy",
+      "structure": "temporal",
+      "task_relevance_hypothesis": "acoustic events",
+      "elements_per_episode": 500,
+      "median_rate_hz": 24.998,
+      "max_held_out_clock_residual_ms": 24.41,
+      "missing_window_fraction": 0.0,
+      "noise_and_uncertainty": "simulated sample noise and device-clock fit error"
+    },
+    "sensor": {
+      "representation": "two continuous process channels",
+      "structure": "temporal",
+      "task_relevance_hypothesis": "current and gas flow",
+      "elements_per_episode": 200,
+      "median_rate_hz": 9.994,
+      "max_held_out_clock_residual_ms": 19.183,
+      "missing_window_fraction": 0.0,
+      "noise_and_uncertainty": "simulated sample noise and device-clock fit error"
+    }
+  },
   "session_count": 12,
   "splits": {
     "TRAIN": 64,
