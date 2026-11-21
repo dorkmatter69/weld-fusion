@@ -158,9 +158,45 @@ not be committed.
    synthetic logistic AUC as a measured Timestral result. The bounded one-CSV
    forecasting smoke test and access steps are in [TIMESTRAL_SENSOR_PILOT.md](TIMESTRAL_SENSOR_PILOT.md).
 
+## Gated modality-shift fusion (synthetic stress test)
+
+`src/weldfusion/shift_fusion.py` adds a RAVEN/MAG-style model. Video is the main
+modality; audio and sensor each add a bounded shift `tanh(W x + c)` to the video
+representation, scaled by a learned scalar gate. The gate also sees reliability
+signals a real system can observe: window presence, within-window noise, and the
+clock residual on the held-out landmark. Training adds one corrupted copy of each
+training episode (noise, missing windows, or misalignment the landmark check
+flags). *Hidden* misalignment, where the residual looks normal, is never trained on.
+
+```bash
+PYTHONPATH=src python -m weldfusion.shift_fusion /tmp/shift-fusion.json   # 5 seeds, ~10 s
+```
+
+Test AUC, mean ± SD over seeds 42–46. The corruption is applied to every test episode.
+
+| Condition | Video only | Continuous | Concat + reliability | Shift, no gate | **Gated shift** | Gate audio / sensor |
+|---|---|---|---|---|---|---|
+| Clean | 0.855 | 0.946 | 0.988 | 0.991 | **0.993** | 0.85 / 0.77 |
+| Audio noisy | 0.855 | 0.876 | 0.949 | 0.955 | **0.962** | 0.71 / 0.77 |
+| Audio missing (8/20 s) | 0.855 | 0.807 | 0.894 ± 0.056 | 0.942 | **0.954** | 0.78 / 0.77 |
+| Audio misaligned, flagged | 0.855 | 0.906 | 0.930 | 0.938 | **0.943** | 0.61 / 0.77 |
+| Audio misaligned, hidden | 0.855 | 0.908 | 0.934 | 0.940 | 0.940 | 0.83 / 0.77 |
+| Sensor noisy | 0.855 | 0.922 | 0.952 | 0.971 | **0.974** | 0.85 / 0.65 |
+| Sensor missing | 0.855 | 0.935 | 0.961 | 0.977 | 0.977 | 0.85 / 0.72 |
+| Sensor misaligned, hidden | 0.855 | 0.940 | 0.948 | 0.974 | 0.970 | 0.85 / 0.76 |
+
+Reading: the **shift structure** beats concatenation with the same inputs, most
+clearly when audio windows are missing (0.942 vs 0.894). The **gate** behaves as
+intended: it closes on noisy or flagged inputs (audio 0.85 → 0.61 under flagged
+misalignment) and cannot react to hidden misalignment. Its AUC gain over the
+no-gate ablation (+0.00 to +0.01) is within one SD across seeds. The shift model
+is the only nonlinear model here, so an equally sized nonlinear concat model
+(MLP) is needed before attributing the gain to "shifting". All results are
+synthetic, with training corruptions resembling the test corruptions.
+
 ## Verify
 
 ```bash
-PYTHONPATH=src python -m pytest -q tests/test_multimodal_benchmark.py
+PYTHONPATH=src python -m pytest -q tests/test_multimodal_benchmark.py tests/test_shift_fusion.py
 node --test web/fusion-core.test.mjs web/embedding-core.test.mjs
 ```

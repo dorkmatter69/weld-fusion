@@ -8,3 +8,5 @@ data/
 *.avi
 *.flac
 *.tar.gz
+.venv-timestral/
+.DS_Store
